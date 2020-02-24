@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Ssera's:: ${param.title }</title>
 
-<link rel="stylesheet" href="/myhome/resources/main_style.css"/>
+<link rel="stylesheet" href="/certification/resources/main_style.css"/>
 
 </head>
 <body>
