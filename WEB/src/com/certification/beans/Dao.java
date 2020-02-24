@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public interface Dao <T extends Vo>{
 	
-	public static final String DB_USER = "jsp";
-	public static final String DB_PASSWORD = "jsppassword";
-	public static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:xe";
+	public static final String DB_USER = "certifi";
+	public static final String DB_PASSWORD = "certifi";
+	public static final String DB_URL = "jdbc:oracle:thin:@//certification.ch3ulmd2qtg7.ap-northeast-2.rds.amazonaws.com:1521/certifi";
 	public static final String DB_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
 	
 	// Connection 생성하는 메서드 
