@@ -18,28 +18,9 @@
 		안했을 경우: LOGIN | JOIN | BOARD | DOWNLOADS
  -->
 <div id = "header">
-	
-	<c:if test = "${ num == 1 }">
-		<a href="/myhome/admin/AdminPage">관리자 페이지</a>
-	</c:if>
-	
-	<c:choose>
-		<c:when test = "${sessionScope.num != null }">
-			<!-- 로그인 했을 경우  -->
-			[${ AccountDao.getInstance().select( sessionScope.num ).nickname }]님
-			<a href="/myhome/logout/Logout">LOGOUT</a>
-			<a href="/myhome/mypage/MyPage">MYPAGE</a>
-		</c:when>
-		<c:otherwise>
-			<!-- 로그인 안 했을 경우 -->
-			<a href="/myhome/login/loginView.jsp">LOGIN</a>
-			<a href="/myhome/join/joinView.jsp">JOIN</a>
-		</c:otherwise>
-	</c:choose>
 
 	<!-- 로그인 여부 상관없음 -->
-	<a href="/myhome/board/list.brd">BOARD</a>
-	<a href="/myhome/downloads/list.do">DOWNLOADS</a>
+	<a href="/certification/board/list.brd">BOARD</a>
 </div>
 <div id = "main">
 
