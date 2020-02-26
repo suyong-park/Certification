@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,13 +21,26 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CivilActivity extends AppCompatActivity {
 
-    private ArrayList<Recycler_title> mArrayList;
     private CertificationTitleAdapter mAdapter;
-    private int count = 0;
+    public GestureDetector gesture_detector;
+
+    TextView name;
+    TextView description;
+    TextView company;
+    TextView job;
+    TextView link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +49,25 @@ public class CivilActivity extends AppCompatActivity {
 
         setTitle("민간자격증");
 
+        name = (TextView) findViewById(R.id.name);
+        description = (TextView) findViewById(R.id.description);
+        company = (TextView) findViewById(R.id.company);
+        job = (TextView) findViewById(R.id.job);
+        link = (TextView) findViewById(R.id.link);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        mArrayList = new ArrayList<>();
-        mAdapter = new CertificationTitleAdapter(mArrayList);
+        mAdapter = new CertificationTitleAdapter();
         recyclerView.setAdapter(mAdapter);
+
+        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
 
         if(!isNetworkConnected())
         {
@@ -60,16 +84,34 @@ public class CivilActivity extends AppCompatActivity {
             return ;
         }
 
-        Button button = (Button) findViewById(R.id.insert_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
+        {
             @Override
-            public void onClick(View v) {
-                count++;
-                Recycler_title data = new Recycler_title(count + "");
-                mArrayList.add(data);
-                mAdapter.notifyDataSetChanged();
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                View childView = rv.findChildViewUnder(e.getX(), e.getY());
+
+                if(childView != null && gesture_detector.onTouchEvent((e))) {
+                    int currentPos = rv.getChildAdapterPosition(childView);
+                    Intent it = new Intent(CivilActivity.this, CertificationActivity.class);
+                    it.putExtra("title", mAdapter.getRecycler_title(currentPos).getTitle());
+                    startActivity(it);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
             }
         });
+
+        ConnectDB();
     }
 
     private boolean isNetworkConnected() { // Checking the Network is Connected
@@ -91,50 +133,74 @@ public class CivilActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void ConnectDB() {
+        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        Call<List<Recycler_title>> call = connectDB.check_test_data();
+
+        call.enqueue(new Callback<List<Recycler_title>>() {
+            @Override
+            public void onResponse(Call<List<Recycler_title>> call, Response<List<Recycler_title>> response) {
+
+                List<Recycler_title> result = response.body();
+
+                if(result != null) {
+                    if (result.size() != 0) {
+                        for (int i = 0; i < result.size(); i++) {
+                            mAdapter.add(new Recycler_title(result.get(i).getTitle()));
+                        }
+                    }
+                }
+
+            }
+            @Override
+            public void onFailure(Call<List<Recycler_title>> call, Throwable t) {
+                Log.d("ERROR MESSAGE", "CONNECT FAIL TO DATABASE");
+            }
+
+        });
+    }
+
     class CertificationTitleAdapter extends RecyclerView.Adapter<CertificationTitleAdapter.ViewHolder> {
 
-        private ArrayList<Recycler_title> mlist;
+        List<Recycler_title> mlist = new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            protected TextView title;
+            TextView title;
 
-            public ViewHolder(View view) {
-                super(view);
-                this.title = (TextView) view.findViewById(R.id.item);
+            public ViewHolder(View itemView) {
+                super(itemView);
+                title = (TextView) itemView.findViewById(R.id.item);
+            }
 
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO : process click event, bring about that certification info to switch another activity
-                        Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
-                        startActivity(intent);
-                    }
-                });
+            public void setData(Recycler_title data) {
+                title.setText(data.getTitle());
             }
         }
 
-        public CertificationTitleAdapter(ArrayList<Recycler_title> list) {
-            this.mlist = list;
+        public void add(Recycler_title item) {
+            mlist.add(item);
+            notifyDataSetChanged();
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list, viewGroup, false);
-            ViewHolder viewholder = new ViewHolder(view);
-            return viewholder;
+            return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder viewholder, int position) { // Define properties of Recycler View items.
-            viewholder.title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-            viewholder.title.setGravity(Gravity.CENTER);
-            viewholder.title.setText(mlist.get(position).getTitle());
+            viewholder.setData(mlist.get(position));
         }
 
         @Override
         public int getItemCount() { // Count of Recycler View items.
             return mlist.size();
+        }
+
+        public Recycler_title getRecycler_title(int pos) {
+            return mlist.get(pos);
         }
     }
 }

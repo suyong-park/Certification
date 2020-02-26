@@ -2,17 +2,13 @@ package com.example.certification;
 
 public class Recycler_title {
 
-    private String title;
+    String NAME;
 
-    public Recycler_title(String title) {
-        this.title = title;
+    public Recycler_title(String NAME) {
+        this.NAME = NAME;
     }
 
     public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        return NAME;
     }
 }

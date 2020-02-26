@@ -4,33 +4,41 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="자격증 이름 : "
         android:textSize="20dp"
         android:layout_margin="15dp"
         />
 
     <TextView
+        android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="자격증 종류 : "
         android:textSize="20dp"
         android:layout_margin="15dp"
         />
 
     <TextView
+        android:id="@+id/company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="관련 직업 : "
         android:textSize="20dp"
         android:layout_margin="15dp"
         />
 
     <TextView
+        android:id="@+id/job"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="another : "
+        android:textSize="20dp"
+        android:layout_margin="15dp"
+        />
+
+    <TextView
+        android:id="@+id/link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textSize="20dp"
         android:layout_margin="15dp"
         />

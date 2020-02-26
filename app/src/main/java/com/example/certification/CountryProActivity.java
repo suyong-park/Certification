@@ -5,12 +5,22 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CountryProActivity extends AppCompatActivity {
+
+    TextView pro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +28,8 @@ public class CountryProActivity extends AppCompatActivity {
         setContentView(R.layout.country_pro);
 
         setTitle("국가전문자격증");
+
+        pro = (TextView) findViewById(R.id.pro);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
