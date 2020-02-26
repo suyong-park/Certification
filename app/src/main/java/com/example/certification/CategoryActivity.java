@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -22,8 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,29 +28,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CivilActivity extends AppCompatActivity {
+public class CategoryActivity extends AppCompatActivity {
 
     private CertificationTitleAdapter mAdapter;
     public GestureDetector gesture_detector;
 
-    TextView name;
-    TextView description;
-    TextView company;
-    TextView job;
-    TextView link;
+    String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.civil);
+        setContentView(R.layout.category);
 
-        setTitle("민간자격증");
+        Intent intent = getIntent();
+        category = intent.getStringExtra("category");  // category of certification
 
-        name = (TextView) findViewById(R.id.name);
-        description = (TextView) findViewById(R.id.description);
-        company = (TextView) findViewById(R.id.company);
-        job = (TextView) findViewById(R.id.job);
-        link = (TextView) findViewById(R.id.link);
+        setTitle(category);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -71,7 +61,7 @@ public class CivilActivity extends AppCompatActivity {
 
         if(!isNetworkConnected())
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CivilActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(CategoryActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)
@@ -92,8 +82,8 @@ public class CivilActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(CivilActivity.this, CertificationActivity.class);
-                    it.putExtra("title", mAdapter.getRecycler_title(currentPos).getTitle());
+                    Intent it = new Intent(CategoryActivity.this, CertificationActivity.class);
+                    it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     startActivity(it);
                     return true;
                 }
@@ -135,28 +125,30 @@ public class CivilActivity extends AppCompatActivity {
 
     public void ConnectDB() {
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
-        Call<List<Recycler_title>> call = connectDB.check_test_data();
+        Call<List<Recycler_title>> call = connectDB.title_data();
 
         call.enqueue(new Callback<List<Recycler_title>>() {
             @Override
-            public void onResponse(Call<List<Recycler_title>> call, Response<List<Recycler_title>> response) {
 
+            public void onResponse(Call<List<Recycler_title>> call, Response<List<Recycler_title>> response) {
                 List<Recycler_title> result = response.body();
 
                 if(result != null) {
                     if (result.size() != 0) {
                         for (int i = 0; i < result.size(); i++) {
-                            mAdapter.add(new Recycler_title(result.get(i).getTitle()));
+                            if(category.contains(result.get(i).getCategory())) {
+                                mAdapter.add(new Recycler_title(result.get(i).getTitle(), result.get(i).getCategory()));
+                            }
+                            else {
+                            }
                         }
                     }
                 }
-
             }
             @Override
             public void onFailure(Call<List<Recycler_title>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO DATABASE");
             }
-
         });
     }
 
@@ -185,7 +177,7 @@ public class CivilActivity extends AppCompatActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.title_list, viewGroup, false);
             return new ViewHolder(view);
         }
 

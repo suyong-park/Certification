@@ -20,9 +20,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".CivilActivity" />
-        <activity android:name=".CountryProActivity" />
-        <activity android:name=".CountryTechActivity" />
+        <activity android:name=".CategoryActivity" />
         <activity android:name=".CertificationActivity" />
 
         <activity
