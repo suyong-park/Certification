@@ -6,6 +6,6 @@
 	<jsp:param name = "title" value = "Main"/>
 </jsp:include>
 
-	이곳은 대문 페이지~~~
+	이곳은 대문 페이지~~~5
 
 <jsp:include page="/layout/footer.jsp" />
