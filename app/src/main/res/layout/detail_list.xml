@@ -10,89 +10,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/job"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
+            android:textSize="25sp"
             android:gravity="center"
-            android:background="@drawable/edge" />
+            android:linksClickable="true"
+            android:autoLink="web" />
 
         <TextView
             android:id="@+id/subject_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/receipt_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/written_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/practical_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/announcement_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:background="@drawable/edge" />
+            android:textSize="25sp"
+            android:gravity="center" />
 
 </LinearLayout>

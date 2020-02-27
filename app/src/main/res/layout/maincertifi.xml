@@ -4,38 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="컴퓨터공학 관련 자격증"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/certification"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".MaincertifiActivity">
 
     <Button
-        android:id="@+id/certification"
+        android:id="@+id/country_tech"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="국가기술자격"
+        android:gravity="center"
+        android:textSize="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:gravity="center"
-        android:text="자격증"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/job"
+        app:layout_constraintBottom_toTopOf="@+id/country_pro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/job"
+        android:id="@+id/country_pro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="진출 분야"
+        android:text="국가전문자격"
         android:gravity="center"
         android:textSize="30dp"
         android:layout_marginLeft="20dp"
@@ -47,13 +37,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/developer_mail"
-        android:layout_width="wrap_content"
+        android:id="@+id/civil"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="개발자에게 보내는 조언 및 건의"
+        android:text="민간자격"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/job" />
+        app:layout_constraintTop_toBottomOf="@+id/country_pro" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

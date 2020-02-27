@@ -20,7 +20,9 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".CategoryActivity" />
+        <activity android:name=".MainjobActivity" />
+        <activity android:name=".MaincertifiActivity" />
+        <activity android:name=".DetailcertifiActivity" />
         <activity android:name=".CertificationActivity" />
 
         <activity

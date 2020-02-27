@@ -97,18 +97,16 @@ public class CertificationActivity extends AppCompatActivity {
             public void onResponse(Call<List<Recycler_detail>> call, Response<List<Recycler_detail>> response) {
                 List<Recycler_detail> result = response.body();
 
-                if(result != null) {
-                    if (result.size() != 0) {
-                        for (int i = 0; i < result.size(); i++) {
+                if(result != null)
+                    if (result.size() != 0)
+                        for (int i = 0; i < result.size(); i++)
                             if(title.contains(result.get(i).getNAME()))
                                 mAdapter.add(new Recycler_detail(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getSUBJECT_NAME(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
-                        }
-                    }
-                }
+
             }
             @Override
             public void onFailure(Call<List<Recycler_detail>> call, Throwable t) {
-                Log.d("ERROR MESSAGE", "CONNECT FAIL TO DATABASE");
+                Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
     }
@@ -145,16 +143,16 @@ public class CertificationActivity extends AppCompatActivity {
             }
 
             public void setData(Recycler_detail data) {
-                name.setText(data.getNAME());
-                description.setText(data.getDESCRIPTION());
-                company.setText(data.getCOMPANY());
-                job.setText(data.getJOB());
-                link.setText(data.getLINK());
-                subject_name.setText(data.getSUBJECT_NAME());
-                receipt_date.setText(data.getRECEIPT_DATE());
-                written_date.setText(data.getWRITTEN_DATE());
-                practical_date.setText(data.getPRACTICAL_DATE());
-                announcement_date.setText(data.getANNOUNCEMENT_DATE());
+                name.setText("이름 : " + data.getNAME());
+                description.setText("자격증 내용 : " + data.getDESCRIPTION());
+                company.setText("관련 회사 : " + data.getCOMPANY());
+                job.setText("관련 직종 : " + data.getJOB());
+                link.setText("관련 링크 : " + data.getLINK());
+                subject_name.setText("시험 과목 : " + data.getSUBJECT_NAME());
+                receipt_date.setText("접수 날짜 : " + data.getRECEIPT_DATE());
+                written_date.setText("필기 시험 : " + data.getWRITTEN_DATE());
+                practical_date.setText("실기 시험 : " + data.getPRACTICAL_DATE());
+                announcement_date.setText("발표 날짜 : " + data.getANNOUNCEMENT_DATE());
             }
         }
 
@@ -177,10 +175,6 @@ public class CertificationActivity extends AppCompatActivity {
         @Override
         public int getItemCount() { // Count of Recycler View items.
             return mlist.size();
-        }
-
-        public Recycler_detail getRecycler_detail(int pos) {
-            return mlist.get(pos);
         }
     }
 }

@@ -28,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryActivity extends AppCompatActivity {
+public class DetailcertifiActivity extends AppCompatActivity {
 
     private CertificationTitleAdapter mAdapter;
     public GestureDetector gesture_detector;
@@ -38,10 +38,10 @@ public class CategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.category);
+        setContentView(R.layout.detailcertifi);
 
         Intent intent = getIntent();
-        category = intent.getStringExtra("category");  // category of certification
+        category = intent.getStringExtra("detailcertifi");  // detailcertifi of certification
 
         setTitle(category);
 
@@ -61,7 +61,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         if(!isNetworkConnected())
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CategoryActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(DetailcertifiActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)
@@ -82,7 +82,7 @@ public class CategoryActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(CategoryActivity.this, CertificationActivity.class);
+                    Intent it = new Intent(DetailcertifiActivity.this, CertificationActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     startActivity(it);
                     return true;
@@ -133,21 +133,16 @@ public class CategoryActivity extends AppCompatActivity {
             public void onResponse(Call<List<Recycler_title>> call, Response<List<Recycler_title>> response) {
                 List<Recycler_title> result = response.body();
 
-                if(result != null) {
-                    if (result.size() != 0) {
-                        for (int i = 0; i < result.size(); i++) {
-                            if(category.contains(result.get(i).getCategory())) {
+                if(result != null)
+                    if (result.size() != 0)
+                        for (int i = 0; i < result.size(); i++)
+                            if(category.contains(result.get(i).getCategory()))
                                 mAdapter.add(new Recycler_title(result.get(i).getTitle(), result.get(i).getCategory()));
-                            }
-                            else {
-                            }
-                        }
-                    }
-                }
+
             }
             @Override
             public void onFailure(Call<List<Recycler_title>> call, Throwable t) {
-                Log.d("ERROR MESSAGE", "CONNECT FAIL TO DATABASE");
+                Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
     }

@@ -1,38 +1,56 @@
 package com.example.certification;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
 
-    Button[] category = new Button[3];
+public class MainActivity  extends AppCompatActivity {
+
+    Button mail;
+    Button job;
+    Button certification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String[] cate = {"민간자격증", "국가기술자격증", "국가전문자격증"};
+        mail = (Button) findViewById(R.id.developer_mail);
+        job = (Button) findViewById(R.id.job);
+        certification = (Button) findViewById(R.id.certification);
 
-        category[0] = (Button) findViewById(R.id.civil);
-        category[1] = (Button) findViewById(R.id.country_tech);
-        category[2] = (Button) findViewById(R.id.country_pro);
+        job.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainjobActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        for(int i = 0; i < category.length; i++) {
-            final int count = i;
-            category[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        certification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MaincertifiActivity.class);
+                startActivity(intent);
+            }
+        });
 
-                    Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
-                    intent.putExtra("category", cate[count]);
-                    startActivity(intent);
-                }
-            });
-        }
+        mail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("plain/Text");
+                String[] address = {"spdlqjfire@gmail.com"};
+                email.putExtra(Intent.EXTRA_EMAIL, address);
+                email.putExtra(Intent.EXTRA_SUBJECT,"<자격증>개발자에게 보내는 조언 및 건의");
+                email.putExtra(Intent.EXTRA_TEXT,"**불편사항 혹은 건의사항의 경우 앱 버전과 안드로이드 기기 종류를 함께 보내주시면 감사하겠습니다.\n앱 버전: \n기기명: ");
+                startActivity(email);
+            }
+        });
     }
+
+
 }
