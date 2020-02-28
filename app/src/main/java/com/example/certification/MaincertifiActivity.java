@@ -31,7 +31,6 @@ public class MaincertifiActivity extends AppCompatActivity {
             category[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent intent = new Intent(getApplicationContext(), DetailcertifiActivity.class);
                     intent.putExtra("detailcertifi", cate[count]);
                     startActivity(intent);

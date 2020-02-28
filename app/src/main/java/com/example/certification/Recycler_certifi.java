@@ -1,11 +1,11 @@
 package com.example.certification;
 
-public class Recycler_title {
+public class Recycler_certifi {
 
     String NAME;
     String CATEGORY;
 
-    public Recycler_title(String NAME, String CATEGORY) {
+    public Recycler_certifi(String NAME, String CATEGORY) {
         this.NAME = NAME;
         this.CATEGORY = CATEGORY;
     }
