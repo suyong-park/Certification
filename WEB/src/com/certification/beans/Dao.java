@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public interface Dao <T extends Vo>{
 	
-	public static final String DB_USER = "certifi";
-	public static final String DB_PASSWORD = "certifi";
+	public static final String DB_USER = "certification";
+	public static final String DB_PASSWORD = "12151215";
 	public static final String DB_URL = "jdbc:oracle:thin:@//certification.ch3ulmd2qtg7.ap-northeast-2.rds.amazonaws.com:1521/certifi";
 	public static final String DB_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
 	
-	// Connection »ý¼ºÇÏ´Â ¸Þ¼­µå 
+	// Connection ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ 
 	/**
-	 * DBÀÇ url, user, password¸¦ »ç¿ëÇÏ¿© DB Ä¿³Ø¼Ç »ý¼º
-	 * @return Connection °´Ã¼
+	 * DBï¿½ï¿½ url, user, passwordï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ DB Ä¿ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+	 * @return Connection ï¿½ï¿½Ã¼
 	 * @throws Exception
 	 */
 	default Connection openConnection() throws Exception {
@@ -25,10 +25,10 @@ public interface Dao <T extends Vo>{
 	}
 	
 	/**
-	 * ÀÎÀÚ·Î µé¾î¿Â Connection, PreparedStatement, ResultSet °´Ã¼¸¦ close()
-	 * @param con (closeÇÒ Connection)
-	 * @param ps (closeÇÒ PreparedStatement)
-	 * @param rs (closeÇÒ ResultSet)
+	 * ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½ï¿½ï¿½ï¿½ Connection, PreparedStatement, ResultSet ï¿½ï¿½Ã¼ï¿½ï¿½ close()
+	 * @param con (closeï¿½ï¿½ Connection)
+	 * @param ps (closeï¿½ï¿½ PreparedStatement)
+	 * @param rs (closeï¿½ï¿½ ResultSet)
 	 */
 	default void closeConnection(Connection con, PreparedStatement ps, ResultSet rs) {
 		try {
