@@ -89,23 +89,23 @@ public class CertificationActivity extends AppCompatActivity {
 
     public void ConnectDB() {
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
-        Call<List<Recycler_detail>> call = connectDB.certification_data();
+        Call<List<Recycler_certifidetail>> call = connectDB.certification_data();
 
-        call.enqueue(new Callback<List<Recycler_detail>>() {
+        call.enqueue(new Callback<List<Recycler_certifidetail>>() {
             @Override
 
-            public void onResponse(Call<List<Recycler_detail>> call, Response<List<Recycler_detail>> response) {
-                List<Recycler_detail> result = response.body();
+            public void onResponse(Call<List<Recycler_certifidetail>> call, Response<List<Recycler_certifidetail>> response) {
+                List<Recycler_certifidetail> result = response.body();
 
                 if(result != null)
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++)
                             if(title.contains(result.get(i).getNAME()))
-                                mAdapter.add(new Recycler_detail(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getSUBJECT_NAME(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
+                                mAdapter.add(new Recycler_certifidetail(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getSUBJECT_NAME(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
 
             }
             @Override
-            public void onFailure(Call<List<Recycler_detail>> call, Throwable t) {
+            public void onFailure(Call<List<Recycler_certifidetail>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
@@ -113,7 +113,7 @@ public class CertificationActivity extends AppCompatActivity {
 
     class CertificationDetailAdapter extends RecyclerView.Adapter<CertificationActivity.CertificationDetailAdapter.ViewHolder> {
 
-        List<Recycler_detail> mlist = new ArrayList<>();
+        List<Recycler_certifidetail> mlist = new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -142,7 +142,7 @@ public class CertificationActivity extends AppCompatActivity {
                 announcement_date = (TextView) itemView.findViewById(R.id.announcement_date);
             }
 
-            public void setData(Recycler_detail data) {
+            public void setData(Recycler_certifidetail data) {
                 name.setText("이름 : " + data.getNAME());
                 description.setText("자격증 내용 : " + data.getDESCRIPTION());
                 company.setText("관련 회사 : " + data.getCOMPANY());
@@ -156,7 +156,7 @@ public class CertificationActivity extends AppCompatActivity {
             }
         }
 
-        public void add(Recycler_detail item) {
+        public void add(Recycler_certifidetail item) {
             mlist.add(item);
             notifyDataSetChanged();
         }

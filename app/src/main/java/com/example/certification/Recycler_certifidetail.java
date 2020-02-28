@@ -1,6 +1,6 @@
 package com.example.certification;
 
-public class Recycler_detail {
+public class Recycler_certifidetail {
 
     String NAME;
     String DESCRIPTION;
@@ -13,7 +13,7 @@ public class Recycler_detail {
     String PRACTICAL_DATE;
     String ANNOUNCEMENT_DATE;
 
-    public Recycler_detail(String NAME, String DESCRIPTION, String COMPANY, String JOB, String LINK, String SUBJECT_NAME, String RECEIPT_DATE, String WRITTEN_DATE, String PRACTICAL_DATE, String ANNOUNCEMENT_DATE) {
+    public Recycler_certifidetail(String NAME, String DESCRIPTION, String COMPANY, String JOB, String LINK, String SUBJECT_NAME, String RECEIPT_DATE, String WRITTEN_DATE, String PRACTICAL_DATE, String ANNOUNCEMENT_DATE) {
         this.NAME = NAME;
         this.DESCRIPTION = DESCRIPTION;
         this.COMPANY = COMPANY;
