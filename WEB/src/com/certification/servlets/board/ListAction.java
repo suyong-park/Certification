@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.certification.beans.BoardDao;
 import com.certification.beans.BoardVo;
 
+
 public class ListAction implements Action{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -15,20 +15,20 @@
 	<tr>
 		<th>글번호</th>
 		<th style="width:55%">제목</th>
-		<th>작성자</th>
-		<th>등록일자</th>
-		<th>조회수</th>		
+		<th>설명</th>
+		<th>회사</th>
+		<th>직업</th>
+		<th>링크</th>		
 	</tr>
 	
 	<c:forEach var = "vo" items="${requestScope.list }">
 		<tr>
 			<td>${vo.num }</td>
-			<td><a href="read.brd?num=${vo.num }">${vo.title }</a></td>
-			<td>${vo.writer }</td>
-			<td>${vo.year }/${vo.month }/${vo.date } <br>
-				${vo.hour }:${vo.minute } <br>
-				${vo.dateStr}</td>
-			<td>${vo.hit }</td>
+			<td>${vo.name }</td>
+			<td>${vo.description }</td>
+			<td>${vo.company }</td>
+			<td>${vo.job }</td>
+			<td>${vo.link }</td>
 		</tr>
 	</c:forEach>
 </table>

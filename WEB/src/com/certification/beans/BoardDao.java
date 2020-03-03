@@ -21,16 +21,16 @@ public class BoardDao implements Dao<BoardVo>{
 	private ResultSet rs;
 	private static BoardDao instance; 
 	static private DataSource ds; 
-	static { // static ÃÊ±âÈ­ ( ·Îµå ÇÒ ¶§ ¹Ù·Î ½ÇÇà )
+	static { // static ï¿½Ê±ï¿½È­ ( ï¿½Îµï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ )
 		try {
 			// javax.naming.Context
-			Context context = new InitialContext(); // context.xml ¸¦ °´Ã¼È­
+			Context context = new InitialContext(); // context.xml ï¿½ï¿½ ï¿½ï¿½Ã¼È­
 			
 			
 			ds = (DataSource)context.lookup("java:comp/env/jdbc/oracle");
-				// lookup(String ÀÌ¸§) ==> ÀÌ¸§À» ÅëÇØ °´Ã¼ ¾ò¾î¿È 
-				// (¾ò¾î¿Ã °´Ã¼´Â DataSource °´Ã¼ (context.xml¿¡ 'jdbc/oracle'·Î µî·ÏÇØµ×À½))
-				// TomcatÀÎ °æ¿ì´Â "java:comp/env/"¸¦ ºÙ¿©¾ß ÇÑ´Ù.
+				// lookup(String ï¿½Ì¸ï¿½) ==> ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ 
+				// (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ DataSource ï¿½ï¿½Ã¼ (context.xmlï¿½ï¿½ 'jdbc/oracle'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½))
+				// Tomcatï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ "java:comp/env/"ï¿½ï¿½ ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 			
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class BoardDao implements Dao<BoardVo>{
 			
 			rs = ps.executeQuery();
 			
-			if(rs.next()) { // next() ÃÖ¼Ò 1¹ø ²À ½ÇÇà
+			if(rs.next()) { // next() ï¿½Ö¼ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				vo = new BoardVo();
 				vo.setNum( rs.getInt("num") );
 				vo.setTitle( rs.getString("title") );
@@ -138,12 +138,12 @@ public class BoardDao implements Dao<BoardVo>{
 	}
 	
 	public ArrayList<BoardVo> selectList(int page) {
-		String sql = "select num, title, writernum, hit, regdate from " + 
-				"(select rownum rn, tt.* from (select * from board order by regdate desc) tt) " + 
+		String sql = "select num, name, description, company, job, link from " + 
+				"(select num rn, tt.* from (select * from certification.certification order by num asc) tt) " + 
 				"where rn >= ? and rn <= ?";
 		ArrayList<BoardVo> list = new ArrayList<>();
 		
-		AccountDao dao = AccountDao.getInstance();
+		//AccountDao dao = AccountDao.getInstance();
 		
 		try {
 			con = ds.getConnection();
@@ -154,23 +154,13 @@ public class BoardDao implements Dao<BoardVo>{
 			rs = ps.executeQuery();
 			while(rs.next()) {
 				BoardVo vo = new BoardVo();
-				vo.setNum( rs.getInt(1) );
-				vo.setTitle( rs.getString(2) );
-				vo.setWriterNum( rs.getInt(3) );
-				vo.setHit( rs.getInt(4) );
-				vo.setRegdate( rs.getDate(5) );
+				vo.setNum(rs.getInt(1));
+				vo.setName(rs.getString(2));
+				vo.setDescription(rs.getString(3));
+				vo.setCompany(rs.getString(4));
+				vo.setJob(rs.getString(5));
+				vo.setLink(rs.getString(6));
 				
-				// ÀÛ¼ºÀÚ ±Û¹øÈ£·Î nickname ¹Þ±â
-				vo.setWriter( dao.select( vo.getWriterNum() ).getNickname() );
-				
-				// ³¯Â¥ º¯È¯
-				Calendar cal = GregorianCalendar.getInstance();
-				cal.setTimeInMillis( vo.getRegdate().getTime() );
-				vo.setYear( cal.get(Calendar.YEAR) );
-				vo.setMonth( cal.get(Calendar.MONTH)+1 );
-				vo.setDate( cal.get(Calendar.DATE) );
-				vo.setHour( cal.get(Calendar.HOUR_OF_DAY) );
-				vo.setMinute( cal.get(Calendar.MINUTE) );
 				list.add(vo);
 			}
 		} catch(Exception e) {
@@ -181,9 +171,9 @@ public class BoardDao implements Dao<BoardVo>{
 		return list;
 	}
 	
-	// ÀüÃ¼ ÆäÀÌÁö °³¼ö
+	// ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public int totalPages() {
-		String sql = "SELECT COUNT(*) FROM board";
+		String sql = "SELECT COUNT(*) FROM certification.certification";
 		int total = 0;
 		
 		try {
@@ -205,7 +195,7 @@ public class BoardDao implements Dao<BoardVo>{
 	
 	
 	public void updateHit(int num) {
-		// num¹ø ±ÛÀÇ hitÀ» 1 Áõ°¡ 
+		// numï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ hitï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½ 
 		String sql = "UPDATE board SET hit = hit+1 WHERE num = ?";
 		try {
 			con = ds.getConnection();

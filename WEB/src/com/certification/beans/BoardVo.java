@@ -16,7 +16,55 @@ public class BoardVo implements Vo{
 	private int minute;
 	private String writer;
 	private String dateStr;
+	private String name;
+	private String description;
+	private String company;
+	private String job;
+	private String link;
+	private String category;
 	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	public String getJob() {
+		return job;
+	}
+	public void setJob(String job) {
+		this.job = job;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
 	public String getDateStr() {
 		return dateStr;
 	}
@@ -58,12 +106,6 @@ public class BoardVo implements Vo{
 	}
 	public void setWriter(String writer) {
 		this.writer = writer;
-	}
-	public int getNum() {
-		return num;
-	}
-	public void setNum(int num) {
-		this.num = num;
 	}
 	public String getTitle() {
 		return title;
