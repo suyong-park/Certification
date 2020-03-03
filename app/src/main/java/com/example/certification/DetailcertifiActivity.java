@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
     public GestureDetector gesture_detector;
 
     String category;
+    Button bookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class DetailcertifiActivity extends AppCompatActivity {
         setTitle(category);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        bookmark = (Button) findViewById(R.id.bookmark);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -84,6 +88,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(DetailcertifiActivity.this, CertificationActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
+                    it.putExtra("num", mAdapter.getRecycler_title(currentPos).getNum());
                     startActivity(it);
                     return true;
                 }
@@ -100,7 +105,6 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
             }
         });
-
         ConnectDB();
     }
 
@@ -136,7 +140,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++)
                             if(category.contains(result.get(i).getCategory()))
-                                mAdapter.add(new Recycler_certifi(result.get(i).getTitle(), result.get(i).getCategory()));
+                                mAdapter.add(new Recycler_certifi(result.get(i).getTitle(), result.get(i).getCategory(), result.get(i).getNum()));
             }
             @Override
             public void onFailure(Call<List<Recycler_certifi>> call, Throwable t) {

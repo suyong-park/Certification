@@ -18,5 +18,4 @@
         </androidx.recyclerview.widget.RecyclerView>
 
     </ScrollView>
-
 </LinearLayout>

@@ -4,14 +4,20 @@ public class Recycler_certifi {
 
     String NAME;
     String CATEGORY;
+    String NUM;
 
-    public Recycler_certifi(String NAME, String CATEGORY) {
+    public Recycler_certifi(String NAME, String CATEGORY, String NUM) {
         this.NAME = NAME;
         this.CATEGORY = CATEGORY;
+        this.NUM = NUM;
     }
 
     public String getCategory() {
         return CATEGORY;
+    }
+
+    public String getNum() {
+        return NUM;
     }
 
     public String getTitle() {

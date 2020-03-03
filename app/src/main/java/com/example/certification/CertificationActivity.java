@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -31,6 +34,9 @@ public class CertificationActivity extends AppCompatActivity {
     private CertificationDetailAdapter mAdapter;
 
     String title;
+    String num;
+
+    Button bookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +46,15 @@ public class CertificationActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         title = intent.getStringExtra("name");  // name of certification
+        num = intent.getStringExtra("num");
+
+        Log.d("", "num값 알아보기" + num);
 
         setTitle(title);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        bookmark = (Button) findViewById(R.id.bookmark);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.detail_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -64,6 +75,16 @@ public class CertificationActivity extends AppCompatActivity {
                     }).show();
             return;
         }
+
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PreferenceManager.setString(getApplicationContext(), num, title);
+                PreferenceManager.setString_key(getApplicationContext(), "key", num);
+                Toast.makeText(getApplicationContext(), "북마크에 추가했습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         ConnectDB();
     }

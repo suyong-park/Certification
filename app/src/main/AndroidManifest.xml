@@ -22,6 +22,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".MainjobActivity" />
         <activity android:name=".MaincertifiActivity" />
+        <activity android:name=".BookmarkActivity" />
         <activity android:name=".DetailcertifiActivity" />
         <activity android:name=".DetailjobActivity" />
         <activity android:name=".CertificationActivity" />

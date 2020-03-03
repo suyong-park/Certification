@@ -9,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity  extends AppCompatActivity {
 
-    Button mail;
-    Button job;
-    Button certification;
+    Button mail, job, certification, bookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +19,7 @@ public class MainActivity  extends AppCompatActivity {
         mail = (Button) findViewById(R.id.developer_mail);
         job = (Button) findViewById(R.id.job);
         certification = (Button) findViewById(R.id.certification);
+        bookmark = (Button) findViewById(R.id.bookmark);
 
         job.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +49,14 @@ public class MainActivity  extends AppCompatActivity {
                 startActivity(email);
             }
         });
+
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO : Fragment로 설계 변경할 수 있는지 확인
+                Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                startActivity(intent);
+            }
+        });
     }
-
-
 }
