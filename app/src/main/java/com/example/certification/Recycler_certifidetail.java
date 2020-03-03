@@ -7,18 +7,20 @@ public class Recycler_certifidetail {
     String COMPANY;
     String JOB;
     String LINK;
+    int NUM;
     String SUBJECT_NAME;
     String RECEIPT_DATE;
     String WRITTEN_DATE;
     String PRACTICAL_DATE;
     String ANNOUNCEMENT_DATE;
 
-    public Recycler_certifidetail(String NAME, String DESCRIPTION, String COMPANY, String JOB, String LINK, String SUBJECT_NAME, String RECEIPT_DATE, String WRITTEN_DATE, String PRACTICAL_DATE, String ANNOUNCEMENT_DATE) {
+    public Recycler_certifidetail(String NAME, String DESCRIPTION, String COMPANY, String JOB, String LINK, int NUM, String SUBJECT_NAME, String RECEIPT_DATE, String WRITTEN_DATE, String PRACTICAL_DATE, String ANNOUNCEMENT_DATE) {
         this.NAME = NAME;
         this.DESCRIPTION = DESCRIPTION;
         this.COMPANY = COMPANY;
         this.JOB = JOB;
         this.LINK = LINK;
+        this.NUM = NUM;
         this.SUBJECT_NAME = SUBJECT_NAME;
         this.RECEIPT_DATE = RECEIPT_DATE;
         this.WRITTEN_DATE = WRITTEN_DATE;
@@ -44,6 +46,10 @@ public class Recycler_certifidetail {
 
     public String getLINK() {
         return LINK;
+    }
+
+    public int getNUM() {
+        return NUM;
     }
 
     public String getSUBJECT_NAME() {

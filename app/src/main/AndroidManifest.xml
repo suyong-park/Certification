@@ -19,14 +19,14 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity" />
-        <activity android:name=".MainjobActivity" />
-        <activity android:name=".MaincertifiActivity" />
         <activity android:name=".BookmarkActivity" />
+        <activity android:name=".CertificationActivity" />
         <activity android:name=".DetailcertifiActivity" />
         <activity android:name=".DetailjobActivity" />
-        <activity android:name=".CertificationActivity" />
         <activity android:name=".JobActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".MaincertifiActivity" />
+        <activity android:name=".MainjobActivity" />
 
         <activity
             android:name=".SplashActivity"

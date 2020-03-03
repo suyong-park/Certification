@@ -22,10 +22,6 @@ class PreferenceManager {
 
     public static final String PREFERENCES_NAME = "rebuild_preference";
     private static final String DEFAULT_VALUE_STRING = "";
-    private static final boolean DEFAULT_VALUE_BOOLEAN = false;
-    private static final int DEFAULT_VALUE_INT = -1;
-    private static final long DEFAULT_VALUE_LONG = -1L;
-    private static final float DEFAULT_VALUE_FLOAT = -1F;
 
     private static SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -39,43 +35,11 @@ class PreferenceManager {
         editor.commit();
     }
 
-    // String key 값 저장
-    public static void setString_key(Context context, String key, String value) {
+    // String value 값 저장
+    public static void setString_max(Context context, String key, String value) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(key, value);
-        editor.commit();
-    }
-
-    // Boolean 값 저장
-    public static void setBoolean(Context context, String key, boolean value) {
-        SharedPreferences prefs = getPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(key, value);
-        editor.commit();
-    }
-
-    // int 값 저장
-    public static void setInt(Context context, String key, int value) {
-        SharedPreferences prefs = getPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(key, value);
-        editor.commit();
-    }
-
-    // long 값 저장
-    public static void setLong(Context context, String key, long value) {
-        SharedPreferences prefs = getPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(key, value);
-        editor.commit();
-    }
-
-    // float 값 저장
-    public static void setFloat(Context context, String key, float value) {
-        SharedPreferences prefs = getPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putFloat(key, value);
         editor.commit();
     }
 
@@ -86,38 +50,10 @@ class PreferenceManager {
         return value;
     }
 
-    // String 값 로드
-    public static String getString_key(Context context, String key) {
+    // String value 값 로드
+    public static String getString_max(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
         String value = prefs.getString(key, DEFAULT_VALUE_STRING);
-        return value;
-    }
-
-    // Bool 값 로드
-    public static boolean getBoolean(Context context, String key) {
-        SharedPreferences prefs = getPreferences(context);
-        boolean value = prefs.getBoolean(key, DEFAULT_VALUE_BOOLEAN);
-        return value;
-    }
-
-    // int 값 로드
-    public static int getInt(Context context, String key) {
-        SharedPreferences prefs = getPreferences(context);
-        int value = prefs.getInt(key, DEFAULT_VALUE_INT);
-        return value;
-    }
-
-    // long 값 로드
-    public static long getLong(Context context, String key) {
-        SharedPreferences prefs = getPreferences(context);
-        long value = prefs.getLong(key, DEFAULT_VALUE_LONG);
-        return value;
-    }
-
-    // float 값 로드
-    public static float getFloat(Context context, String key) {
-        SharedPreferences prefs = getPreferences(context);
-        float value = prefs.getFloat(key, DEFAULT_VALUE_FLOAT);
         return value;
     }
 
