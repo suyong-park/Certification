@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +32,7 @@ public class BookmarkActivity extends AppCompatActivity {
     String state;
 
     Button delete;
-    int max;
+    int max, count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class BookmarkActivity extends AppCompatActivity {
         delete = (Button) findViewById(R.id.delete);
 
         try {
+
             value = PreferenceManager.getString_max(getApplicationContext(), "value"); // max value
             max = Integer.parseInt(value);
 
@@ -54,10 +56,16 @@ public class BookmarkActivity extends AppCompatActivity {
                 String temp = String.valueOf(i);
                 text = PreferenceManager.getString(getApplicationContext(), temp);
                 if(!text.equals(""))
+                {
                     TextView(text);
+                    count++;
+                }
             }
+
+            if(count == 0)
+                TextView("북마크가 없어용");
         }
-        catch(NumberFormatException e) {
+        catch (NumberFormatException e) {
             TextView("북마크가 없어용");
         }
 
@@ -77,7 +85,6 @@ public class BookmarkActivity extends AppCompatActivity {
                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                PreferenceManager.clear(getApplicationContext());
                                 for(int i = 1; i <= max; i++) {
                                     String temp = String.valueOf(i);
                                     PreferenceManager.removeKey(getApplicationContext(), temp);
@@ -85,7 +92,7 @@ public class BookmarkActivity extends AppCompatActivity {
                                 showToast(getApplicationContext(), "북마크가 삭제되었습니다.");
                                 finish();
                                 startActivity(getIntent());
-                                overridePendingTransition(0, 0);
+                                overridePendingTransition(0, 0); // Blocking an activity animation when an activity was switch over.
                             }
                         })
                         .setNegativeButton("아니오", new DialogInterface.OnClickListener() {

@@ -27,15 +27,17 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".MaincertifiActivity" />
         <activity android:name=".MainjobActivity" />
-
         <activity
             android:name=".SplashActivity"
             android:theme="@style/splash_background">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".TransparentActivity"
+            android:theme="@style/Transparent" >
         </activity>
     </application>
 

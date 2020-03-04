@@ -1,11 +1,13 @@
 package com.example.certification;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -33,6 +35,8 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
     private CertificationTitleAdapter mAdapter;
     public GestureDetector gesture_detector;
+
+    ProgressDialog dialog;
 
     String category;
     Button bookmark;
@@ -105,7 +109,21 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
             }
         });
-        ConnectDB();
+
+        Handler handler = new Handler();
+
+        dialog = new ProgressDialog(DetailcertifiActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("데이터를 불러오는 중입니다.");
+        dialog.show();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ConnectDB();
+                dialog.dismiss();
+            }
+        }, 700);
     }
 
     private boolean isNetworkConnected() { // Checking the Network is Connected
@@ -128,6 +146,8 @@ public class DetailcertifiActivity extends AppCompatActivity {
     }
 
     public void ConnectDB() {
+
+
         ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_certifi>> call = connectDB.title_data();
 

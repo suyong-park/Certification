@@ -1,11 +1,13 @@
 package com.example.certification;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -31,6 +33,7 @@ import retrofit2.Response;
 public class CertificationActivity extends AppCompatActivity {
 
     private CertificationDetailAdapter mAdapter;
+    ProgressDialog dialog;
 
     String title;
     String num;
@@ -73,7 +76,20 @@ public class CertificationActivity extends AppCompatActivity {
                     }).show();
             return;
         }
-        ConnectDB();
+        Handler handler = new Handler();
+
+        dialog = new ProgressDialog(CertificationActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("데이터를 불러오는 중입니다.");
+        dialog.show();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ConnectDB();
+                dialog.dismiss();
+            }
+        }, 1000);
 
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,19 +1,19 @@
 package com.example.certification;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -31,6 +31,7 @@ import retrofit2.Response;
 public class JobActivity extends AppCompatActivity {
 
     private JobDetailAdapter mAdapter;
+    ProgressDialog dialog;
     String name, num;
 
     @Override
@@ -67,7 +68,20 @@ public class JobActivity extends AppCompatActivity {
             return ;
         }
 
-        ConnectDB();
+        Handler handler = new Handler();
+
+        dialog = new ProgressDialog(JobActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("데이터를 불러오는 중입니다.");
+        dialog.show();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ConnectDB();
+                dialog.dismiss();
+            }
+        }, 1000);
     }
 
     public void ConnectDB() {

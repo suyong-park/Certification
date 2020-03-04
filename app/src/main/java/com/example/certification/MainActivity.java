@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,11 @@ public class MainActivity  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(!PreferenceManager.getBoolean(getApplicationContext(), "never") && !PreferenceManager.getBoolean(getApplicationContext(), "close")) {
+            Intent intent = new Intent(getApplicationContext(), TransparentActivity.class);
+            startActivity(intent);
+        }
 
         mail = (Button) findViewById(R.id.developer_mail);
         job = (Button) findViewById(R.id.job);

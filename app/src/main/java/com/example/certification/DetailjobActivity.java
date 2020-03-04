@@ -1,11 +1,13 @@
 package com.example.certification;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -32,6 +34,8 @@ public class DetailjobActivity extends AppCompatActivity {
 
     private DetailjobAdapter mAdapter;
     public GestureDetector gesture_detector;
+
+    ProgressDialog dialog;
 
     String title;
 
@@ -100,7 +104,20 @@ public class DetailjobActivity extends AppCompatActivity {
             }
         });
 
-        ConnectDB();
+        Handler handler = new Handler();
+
+        dialog = new ProgressDialog(DetailjobActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("데이터를 불러오는 중입니다.");
+        dialog.show();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ConnectDB();
+                dialog.dismiss();
+            }
+        }, 700);
     }
 
     public void ConnectDB() {
