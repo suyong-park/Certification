@@ -81,19 +81,9 @@ public class CertificationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String ch_max = String.valueOf(max);
-                Log.d("ㅇㅇㅇㅇㅇㅇ", "max값 알아내보자" + max);
 
                 PreferenceManager.setString(getApplicationContext(), num, title);
                 PreferenceManager.setString_max(getApplicationContext(), "value", ch_max);
-
-
-                /* TODO : num값은 한번 눌리고 다음번 눌린 경우 가장 최근의 값을 저장하기 때문에 이전의 스택은 저장되지 않는다.
-                          따라서, 이전의 스택을 저장할 수 있도록 방법을 생각한다.
-                          1. Stack 구현.
-                          2. 현재 문자열의 데이터 타입을 갖는 num 변수에 num의 실질적인 값을 concat 하여 value 값을 불러올 수 있도록 한다.
-                          3. setString_value 메소드를 생성한 후 key 값은 모두 다르게 하여 저장한다.
-                 */
-
 
                 Toast.makeText(getApplicationContext(), "북마크에 추가했습니다.", Toast.LENGTH_SHORT).show();
             }

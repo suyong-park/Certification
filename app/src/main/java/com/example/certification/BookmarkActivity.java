@@ -1,7 +1,10 @@
 package com.example.certification;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class BookmarkActivity extends AppCompatActivity {
 
-    private static final float FONT_SIZE = 10;
+    private static Toast toast;
+    private static final float FONT_SIZE = 30;
     LinearLayout container;
+
+    String state;
+
     Button delete;
+    int max;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +32,12 @@ public class BookmarkActivity extends AppCompatActivity {
         setContentView(R.layout.bookmark);
 
         String text, value;
-        int max;
 
         container = (LinearLayout) findViewById(R.id.container);
         delete = (Button) findViewById(R.id.delete);
 
         try {
+
             value = PreferenceManager.getString_max(getApplicationContext(), "value"); // max value
             max = Integer.parseInt(value);
 
@@ -37,9 +45,7 @@ public class BookmarkActivity extends AppCompatActivity {
                 String temp = String.valueOf(i);
                 text = PreferenceManager.getString(getApplicationContext(), temp);
                 if(!text.equals(""))
-                {
                     TextView(text);
-                }
             }
         }
         catch(NumberFormatException e) {
@@ -49,15 +55,55 @@ public class BookmarkActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO : 자동 새로고침 기능 추가해야함.
-                PreferenceManager.clear(getApplicationContext());
-                Toast.makeText(getApplicationContext(), "북마크가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(BookmarkActivity.this);
+
+                if(state.equals("북마크가 없어용")) {
+                    showToast(getApplicationContext(), "삭제할 북마크가 없습니다.");
+                    return ;
+                }
+
+                builder.setTitle("메시지")
+                        .setMessage("정말 북마크를 삭제하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PreferenceManager.clear(getApplicationContext());
+                                for(int i = 1; i <= max; i++) {
+                                    String temp = String.valueOf(i);
+                                    PreferenceManager.removeKey(getApplicationContext(), temp);
+                                }
+                                showToast(getApplicationContext(), "북마크가 삭제되었습니다.");
+                                finish();
+                                startActivity(getIntent());
+                                overridePendingTransition(0, 0);
+                            }
+                        })
+                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return ;
+                            }
+                        }).show();
             }
         });
     }
 
-    public void TextView(String data) {
+    public static void showToast(Context context,String message) {
+
+        if(toast == null)
+            toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        else
+            toast.setText(message);
+        toast.show();
+    }
+
+    public void TextView(final String data) {
+
+        state = data;
+
         TextView text = new TextView(getApplicationContext());
+
         text.setText(data);
         text.setTextSize(FONT_SIZE);
 
@@ -65,5 +111,18 @@ public class BookmarkActivity extends AppCompatActivity {
         linear_par.gravity = Gravity.CENTER;
         text.setLayoutParams(linear_par);
         container.addView(text);
+
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(data.equals("북마크가 없어용"))
+                    return ;
+                Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+                intent.putExtra("name", data);
+                startActivity(intent);
+            }
+        });
+
     }
 }
