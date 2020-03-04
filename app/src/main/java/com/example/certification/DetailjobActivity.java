@@ -84,6 +84,7 @@ public class DetailjobActivity extends AppCompatActivity {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(DetailjobActivity.this, JobActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getJOB_NAME());
+                    it.putExtra("num", mAdapter.getRecycler_title(currentPos).getNUM());
                     startActivity(it);
                     return true;
                 }
@@ -115,7 +116,7 @@ public class DetailjobActivity extends AppCompatActivity {
                     if(result.size() != 0)
                         for (int i = 0; i < result.size(); i++)
                             if(result.get(i).getJOB_CATEGORY().equals(title))
-                                mAdapter.add(new Recycler_job(result.get(i).getJOB_NAME(), result.get(i).getJOB_CATEGORY()));
+                                mAdapter.add(new Recycler_job(result.get(i).getJOB_NAME(), result.get(i).getJOB_CATEGORY(), result.get(i).getNUM()));
 
             }
             @Override
@@ -169,7 +170,7 @@ public class DetailjobActivity extends AppCompatActivity {
 
         @Override
         public DetailjobActivity.DetailjobAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.title_list, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_titlelist, viewGroup, false);
             return new DetailjobActivity.DetailjobAdapter.ViewHolder(view);
         }
 

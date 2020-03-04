@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,6 +17,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class BookmarkActivity extends AppCompatActivity {
+
+    /*
+       TODO
+        1. 제거하기 버튼을 제거하고 swipelayout을 구성하여 사용할 수 있도록 한다.
+        2. TextView 왼쪽에 RadioButton을 추가하여 삭제할 컴포넌트를 클릭할 수 있도록 한다.
+     */
 
     private static Toast toast;
     private static final float FONT_SIZE = 30;
@@ -31,13 +38,15 @@ public class BookmarkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookmark);
 
+        setTitle("북마크");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         String text, value;
 
         container = (LinearLayout) findViewById(R.id.container);
         delete = (Button) findViewById(R.id.delete);
 
         try {
-
             value = PreferenceManager.getString_max(getApplicationContext(), "value"); // max value
             max = Integer.parseInt(value);
 
@@ -89,6 +98,16 @@ public class BookmarkActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish(); // If touch the back key on tool bar, then finish present activity.
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public static void showToast(Context context,String message) {
 
         if(toast == null)
@@ -110,6 +129,7 @@ public class BookmarkActivity extends AppCompatActivity {
         LinearLayout.LayoutParams linear_par = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         linear_par.gravity = Gravity.CENTER;
         text.setLayoutParams(linear_par);
+
         container.addView(text);
 
         text.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +143,5 @@ public class BookmarkActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 }

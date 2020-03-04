@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,7 +54,7 @@ public class CertificationActivity extends AppCompatActivity {
 
         bookmark = (Button) findViewById(R.id.bookmark);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.detail_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new CertificationDetailAdapter();
@@ -187,7 +186,7 @@ public class CertificationActivity extends AppCompatActivity {
 
         @Override
         public CertificationActivity.CertificationDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.detail_list, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_certifidetail, viewGroup, false);
             return new CertificationActivity.CertificationDetailAdapter.ViewHolder(view);
         }
 

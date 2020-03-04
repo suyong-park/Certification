@@ -4,10 +4,16 @@ public class Recycler_job {
 
     String JOB_NAME;
     String JOB_CATEGORY;
+    String NUM;
 
-    public Recycler_job(String JOB_NAME, String JOB_CATEGORY) {
+    public Recycler_job(String JOB_NAME, String JOB_CATEGORY, String NUM) {
         this.JOB_NAME = JOB_NAME;
         this.JOB_CATEGORY = JOB_CATEGORY;
+        this.NUM = NUM;
+    }
+
+    public String getNUM() {
+        return NUM;
     }
 
     public String getJOB_CATEGORY() {
