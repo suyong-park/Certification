@@ -28,7 +28,7 @@ class PreferenceManager {
         return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    // String 값 저장
+    // save String value
     public static void setString(Context context, String key, String value) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
@@ -36,7 +36,7 @@ class PreferenceManager {
         editor.commit();
     }
 
-    // String value 값 저장
+    // save String max value about Certification Database num property
     public static void setString_max(Context context, String key, String value) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
@@ -44,7 +44,7 @@ class PreferenceManager {
         editor.commit();
     }
 
-    // boolean 값 저장
+    // save boolean value
     public static void setBoolean(Context context, String key, boolean value) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
@@ -52,28 +52,28 @@ class PreferenceManager {
         editor.commit();
     }
 
-    // String 값 로드
+    // load String value
     public static String getString(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
         String value = prefs.getString(key, DEFAULT_VALUE_STRING);
         return value;
     }
 
-    // String value 값 로드
+    // String max value about Certification Database num property
     public static String getString_max(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
         String value = prefs.getString(key, DEFAULT_VALUE_STRING);
         return value;
     }
 
-    // boolean 값 로드
+    // load boolean value
     public static boolean getBoolean(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
         boolean value = prefs.getBoolean(key, DEFAULT_VALUE_BOOLEAN);
         return value;
     }
 
-    // key값 삭제
+    // delete key
     public static void removeKey(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor edit = prefs.edit();
@@ -81,7 +81,7 @@ class PreferenceManager {
         edit.commit();
     }
 
-    // 현재 저장된 데이터 삭제
+    // delete data about PreperenceManager
     public static void clear(Context context) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor edit = prefs.edit();

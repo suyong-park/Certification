@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +28,7 @@ public class BookmarkActivity extends AppCompatActivity {
     private static final float FONT_SIZE = 30;
     LinearLayout container;
 
-    String state;
+    String state, num;
 
     Button delete;
     int max, count = 0;
@@ -48,7 +47,6 @@ public class BookmarkActivity extends AppCompatActivity {
         delete = (Button) findViewById(R.id.delete);
 
         try {
-
             value = PreferenceManager.getString_max(getApplicationContext(), "value"); // max value
             max = Integer.parseInt(value);
 
@@ -58,10 +56,10 @@ public class BookmarkActivity extends AppCompatActivity {
                 if(!text.equals(""))
                 {
                     TextView(text);
+                    num = temp;
                     count++;
                 }
             }
-
             if(count == 0)
                 TextView("북마크가 없어용");
         }
@@ -147,6 +145,7 @@ public class BookmarkActivity extends AppCompatActivity {
                     return ;
                 Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
                 intent.putExtra("name", data);
+                intent.putExtra("num", num);
                 startActivity(intent);
             }
         });

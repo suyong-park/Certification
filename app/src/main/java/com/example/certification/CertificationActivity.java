@@ -96,6 +96,25 @@ public class CertificationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String ch_max = String.valueOf(max);
+                String text;
+
+                for(int i = 1; i <= max; i++) {
+                    text = PreferenceManager.getString(getApplicationContext(), num);
+                    if(!text.equals(""))
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CertificationActivity.this);
+                        builder.setTitle("오류")
+                                .setMessage("이미 존재하는 북마크입니다.")
+                                .setCancelable(false)
+                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        return ;
+                                    }
+                                }).show();
+                        return ;
+                    }
+                }
 
                 PreferenceManager.setString(getApplicationContext(), num, title);
                 PreferenceManager.setString_max(getApplicationContext(), "value", ch_max);

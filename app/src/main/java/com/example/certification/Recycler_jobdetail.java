@@ -7,13 +7,19 @@ public class Recycler_jobdetail {
     String DESCRIPTION;
     String LINK;
     String NUM;
+    String NAME;
 
-    public Recycler_jobdetail(String JOB_NAME, String JOB_CATEGORY, String DESCRIPTION, String LINK, String NUM) {
+    public Recycler_jobdetail(String JOB_NAME, String JOB_CATEGORY, String DESCRIPTION, String LINK, String NUM, String NAME) {
         this.JOB_NAME = JOB_NAME;
         this.JOB_CATEGORY = JOB_CATEGORY;
         this.DESCRIPTION = DESCRIPTION;
         this.LINK = LINK;
         this.NUM = NUM;
+        this.NAME = NAME;
+    }
+
+    public String getNAME() {
+        return NAME;
     }
 
     public String getJOB_NAME() {

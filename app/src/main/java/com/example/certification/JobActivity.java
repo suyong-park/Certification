@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,8 @@ public class JobActivity extends AppCompatActivity {
 
     private JobDetailAdapter mAdapter;
     ProgressDialog dialog;
-    String name, num;
+    String name, num, certification, certification_num;
+    Button move;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class JobActivity extends AppCompatActivity {
         setTitle(name);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        move = (Button) findViewById(R.id.move);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.job_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -82,6 +86,16 @@ public class JobActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         }, 1000);
+
+        move.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+                intent.putExtra("name", certification);
+                intent.putExtra("num", certification_num);
+                startActivity(intent);
+            }
+        });
     }
 
     public void ConnectDB() {
@@ -96,8 +110,11 @@ public class JobActivity extends AppCompatActivity {
                 if(result != null)
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++)
-                            if(name.equals(result.get(i).getJOB_NAME()))
-                                mAdapter.add(new Recycler_jobdetail(result.get(i).getJOB_NAME(), result.get(i).getJOB_CATEGORY(), result.get(i).getDESCRIPTION(), result.get(i).getLINK(), result.get(i).getNUM()));
+                            if(name.equals(result.get(i).getJOB_NAME())) {
+                                mAdapter.add(new Recycler_jobdetail(result.get(i).getJOB_NAME(), result.get(i).getJOB_CATEGORY(), result.get(i).getDESCRIPTION(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getNAME()));
+                                certification = result.get(i).getNAME();
+                                certification_num = result.get(i).getNUM();
+                            }
             }
             @Override
             public void onFailure(Call<List<Recycler_jobdetail>> call, Throwable t) {
@@ -131,21 +148,24 @@ public class JobActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            TextView name;
+            TextView job_name;
             TextView description;
             TextView link;
+            TextView name;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                name = (TextView) itemView.findViewById(R.id.job_name);
-                description= (TextView) itemView.findViewById(R.id.description);
+                job_name = (TextView) itemView.findViewById(R.id.job_name);
+                description = (TextView) itemView.findViewById(R.id.description);
                 link = (TextView) itemView.findViewById(R.id.link);
+                name = (TextView) itemView.findViewById(R.id.name);
             }
 
             public void setData(Recycler_jobdetail data) {
-                name.setText("직업 이름 : " + data.getJOB_NAME());
+                job_name.setText("직업 이름 : " + data.getJOB_NAME());
                 description.setText("직업 설명 : " + data.getDESCRIPTION());
-                link.setText("자격증 내용 : " + data.getLINK());
+                link.setText("관련 링크 : " + data.getLINK());
+                name.setText("관련 자격증 : " + data.getNAME());
             }
         }
 
