@@ -78,6 +78,7 @@ public class JobActivity extends AppCompatActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("데이터를 불러오는 중입니다.");
         dialog.show();
+        dialog.setCancelable(false);
 
         handler.postDelayed(new Runnable() {
             @Override
