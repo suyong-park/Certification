@@ -1,14 +1,12 @@
 package com.example.certification;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +90,7 @@ public class DeleteBookmarkFragment extends Fragment {
                                                 }
                                         listView.clearChoices();
                                         adapter.notifyDataSetChanged();
+                                        Snackbar.make(getView(), "북마크를 삭제했어염", Snackbar.LENGTH_SHORT).show();
                                     }
                                 }
                             })
@@ -129,8 +128,7 @@ public class DeleteBookmarkFragment extends Fragment {
             for(int i = 1; i <= max; i++) {
                 String temp = String.valueOf(i);
                 text = PreferenceManager.getString(getContext(), temp);
-                if(!text.equals(""))
-                {
+                if(!text.equals("")) {
                     items.add(text);
                     num = temp;
                 }

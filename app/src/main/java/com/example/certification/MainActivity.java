@@ -1,68 +1,111 @@
 package com.example.certification;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity  extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button mail, job, certification, bookmark;
+    EditText editText;
+    Button search;
+
+    DrawerLayout drawer;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!PreferenceManager.getBoolean(getApplicationContext(), "never") && !PreferenceManager.getBoolean(getApplicationContext(), "close")) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        editText = findViewById(R.id.editText);
+        search = findViewById(R.id.search);
+
+        setSupportActionBar(toolbar);
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START))
+            drawer.closeDrawer(GravityCompat.START);
+        else
+            super.onBackPressed();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if(id == R.id.develop) {
             Intent intent = new Intent(getApplicationContext(), TransparentActivity.class);
             startActivity(intent);
         }
-
-        mail = (Button) findViewById(R.id.developer_mail);
-        job = (Button) findViewById(R.id.job);
-        certification = (Button) findViewById(R.id.certification);
-        bookmark = (Button) findViewById(R.id.bookmark);
-
-        job.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainjobActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        certification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MaincertifiActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent email = new Intent(Intent.ACTION_SEND);
-                email.setType("plain/Text");
-                String[] address = {"spdlqjfire@gmail.com"};
-                email.putExtra(Intent.EXTRA_EMAIL, address);
-                email.putExtra(Intent.EXTRA_SUBJECT,"<자격증>개발자에게 보내는 조언 및 건의");
-                email.putExtra(Intent.EXTRA_TEXT,"**불편사항 혹은 건의사항의 경우 앱 버전과 안드로이드 기기 종류를 함께 보내주시면 감사하겠습니다.\n앱 버전: \n기기명: ");
-                startActivity(email);
-            }
-        });
-
-        bookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO : Fragment로 설계 변경할 수 있는지 확인
-                Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
-                startActivity(intent);
-            }
-        });
+        else if(id == R.id.certification) {
+            Intent intent = new Intent(getApplicationContext(), MaincertifiActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.job) {
+            Intent intent = new Intent(getApplicationContext(), MainjobActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.bookmark) {
+            Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.share) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "안녕 !! 이건 공유하기");
+            intent.putExtra(Intent.EXTRA_TEXT, "이런 앱이 있당!!");
+            Intent chooser = Intent.createChooser(intent, "공유");
+            startActivity(chooser);
+        }
+        else if(id == R.id.send) {
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.setType("plain/Text");
+            String[] address = {"spdlqjfire@gmail.com"};
+            email.putExtra(Intent.EXTRA_EMAIL, address);
+            email.putExtra(Intent.EXTRA_SUBJECT,"<자격증>개발자에게 보내는 조언 및 건의");
+            email.putExtra(Intent.EXTRA_TEXT,"**불편사항 혹은 건의사항의 경우 앱 버전과 안드로이드 기기 종류를 함께 보내주시면 감사하겠습니다.\n앱 버전: \n기기명: ");
+            startActivity(email);
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

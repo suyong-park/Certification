@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class CertificationActivity extends AppCompatActivity {
 
     private CertificationDetailAdapter mAdapter;
     ProgressDialog dialog;
+    Handler handler = new Handler();
 
     String title;
     String num;
@@ -76,21 +80,9 @@ public class CertificationActivity extends AppCompatActivity {
                     }).show();
             return;
         }
-        Handler handler = new Handler();
 
-        dialog = new ProgressDialog(CertificationActivity.this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("데이터를 불러오는 중입니다.");
-        dialog.show();
-        dialog.setCancelable(false);
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ConnectDB();
-                dialog.dismiss();
-            }
-        }, 1000);
+        Asynctask asynctask = new Asynctask();
+        asynctask.execute();
 
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +112,7 @@ public class CertificationActivity extends AppCompatActivity {
                 PreferenceManager.setString(getApplicationContext(), num, title);
                 PreferenceManager.setString_max(getApplicationContext(), "value", ch_max);
 
-                Toast.makeText(getApplicationContext(), "북마크에 추가했습니다.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(v, "북마크에 추가했어염", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -234,6 +226,39 @@ public class CertificationActivity extends AppCompatActivity {
         @Override
         public int getItemCount() { // Count of Recycler View items.
             return mlist.size();
+        }
+    }
+
+    class Asynctask extends AsyncTask<Void, Void, Void> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = new ProgressDialog(CertificationActivity.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("데이터를 불러오는 중입니다.");
+            dialog.show();
+            dialog.setCancelable(false);
+        }
+
+        protected Void doInBackground(Void ... values) {
+
+            try {
+                ConnectDB();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.dismiss();
+                }
+            }, 700);
         }
     }
 }

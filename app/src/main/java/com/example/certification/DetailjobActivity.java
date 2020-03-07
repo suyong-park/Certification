@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class DetailjobActivity extends AppCompatActivity {
 
     private DetailjobAdapter mAdapter;
     public GestureDetector gesture_detector;
+    Handler handler = new Handler();
 
     ProgressDialog dialog;
 
@@ -104,21 +106,8 @@ public class DetailjobActivity extends AppCompatActivity {
             }
         });
 
-        Handler handler = new Handler();
-
-        dialog = new ProgressDialog(DetailjobActivity.this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("데이터를 불러오는 중입니다.");
-        dialog.show();
-        dialog.setCancelable(false);
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ConnectDB();
-                dialog.dismiss();
-            }
-        }, 700);
+        Asynctask asyncTask = new Asynctask();
+        asyncTask.execute();
     }
 
     public void ConnectDB() {
@@ -204,6 +193,39 @@ public class DetailjobActivity extends AppCompatActivity {
 
         public Recycler_job getRecycler_title(int pos) {
             return mlist.get(pos);
+        }
+    }
+
+    class Asynctask extends AsyncTask<Void, Void, Void> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = new ProgressDialog(DetailjobActivity.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("데이터를 불러오는 중입니다.");
+            dialog.show();
+            dialog.setCancelable(false);
+        }
+
+        protected Void doInBackground(Void ... values) {
+
+            try {
+                ConnectDB();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.dismiss();
+                }
+            }, 700);
         }
     }
 }

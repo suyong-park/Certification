@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -31,6 +32,7 @@ import retrofit2.Response;
 
 public class JobActivity extends AppCompatActivity {
 
+    Handler handler = new Handler();
     private JobDetailAdapter mAdapter;
     ProgressDialog dialog;
     String name, num, certification, certification_num;
@@ -72,21 +74,8 @@ public class JobActivity extends AppCompatActivity {
             return ;
         }
 
-        Handler handler = new Handler();
-
-        dialog = new ProgressDialog(JobActivity.this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("데이터를 불러오는 중입니다.");
-        dialog.show();
-        dialog.setCancelable(false);
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ConnectDB();
-                dialog.dismiss();
-            }
-        }, 1000);
+        Asynctask asyncTask = new Asynctask();
+        asyncTask.execute();
 
         move.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +178,39 @@ public class JobActivity extends AppCompatActivity {
         @Override
         public int getItemCount() { // Count of Recycler View items.
             return mlist.size();
+        }
+    }
+
+    class Asynctask extends AsyncTask<Void, Void, Void> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = new ProgressDialog(JobActivity.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("데이터를 불러오는 중입니다.");
+            dialog.show();
+            dialog.setCancelable(false);
+        }
+
+        protected Void doInBackground(Void ... values) {
+
+            try {
+                ConnectDB();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.dismiss();
+                }
+            }, 700);
         }
     }
 }

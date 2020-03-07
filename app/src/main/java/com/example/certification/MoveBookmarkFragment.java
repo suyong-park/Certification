@@ -6,8 +6,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -64,8 +64,7 @@ public class MoveBookmarkFragment extends Fragment {
             for(int i = 1; i <= max; i++) {
                 String temp = String.valueOf(i);
                 text = PreferenceManager.getString(getContext(), temp);
-                if(!text.equals(""))
-                {
+                if(!text.equals("")) {
                     items.add(text);
                     num = temp;
                 }

@@ -19,7 +19,6 @@ public class BookmarkActivity extends AppCompatActivity {
         setContentView(R.layout.bookmark);
 
         setTitle("북마크");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fragment1 = new MoveBookmarkFragment();
         fragment2 = new DeleteBookmarkFragment();
@@ -40,15 +39,5 @@ public class BookmarkActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish(); // If touch the back key on tool bar, then finish present activity.
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
