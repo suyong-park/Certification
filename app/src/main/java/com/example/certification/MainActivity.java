@@ -2,11 +2,12 @@ package com.example.certification;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -22,7 +23,6 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     EditText editText;
-    Button search;
 
     DrawerLayout drawer;
     Toolbar toolbar;
@@ -33,23 +33,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        // If the keyboard blinding other components, then components are go up the keyboard.
 
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         editText = findViewById(R.id.editText);
-        search = findViewById(R.id.search);
 
         setSupportActionBar(toolbar);
 
-        search.setOnClickListener(new View.OnClickListener() {
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEARCH: // Search
+                        Toast.makeText(getApplicationContext(), "검색창 눌렀넹", Toast.LENGTH_SHORT).show();
+                        break;
+                    default: // Blocking Press Enter
+                        return false;
+                }
+                return true;
             }
         });
-
-
-
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);

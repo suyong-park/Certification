@@ -47,7 +47,7 @@ public class DetailjobActivity extends AppCompatActivity {
         setContentView(R.layout.detailjob);
 
         Intent intent = getIntent();
-        title = intent.getStringExtra("title");
+        title = intent.getStringExtra("category");
 
         setTitle(title);
 

@@ -44,14 +44,6 @@ class PreferenceManager {
         editor.commit();
     }
 
-    // save boolean value
-    public static void setBoolean(Context context, String key, boolean value) {
-        SharedPreferences prefs = getPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(key, value);
-        editor.commit();
-    }
-
     // load String value
     public static String getString(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
@@ -63,13 +55,6 @@ class PreferenceManager {
     public static String getString_max(Context context, String key) {
         SharedPreferences prefs = getPreferences(context);
         String value = prefs.getString(key, DEFAULT_VALUE_STRING);
-        return value;
-    }
-
-    // load boolean value
-    public static boolean getBoolean(Context context, String key) {
-        SharedPreferences prefs = getPreferences(context);
-        boolean value = prefs.getBoolean(key, DEFAULT_VALUE_BOOLEAN);
         return value;
     }
 

@@ -1,12 +1,12 @@
 package com.example.certification;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +33,10 @@ public class DeleteBookmarkFragment extends Fragment {
     String words = "";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_delete_bookmark, container, false);
 
         ActionBar actionBar = ((BookmarkActivity)getActivity()).getSupportActionBar();
-        actionBar.setTitle("북마크 삭제화면");
         actionBar.setDisplayHomeAsUpEnabled(false);
 
         delete = (Button) view.findViewById(R.id.delete);
@@ -90,7 +89,17 @@ public class DeleteBookmarkFragment extends Fragment {
                                                 }
                                         listView.clearChoices();
                                         adapter.notifyDataSetChanged();
+
+                                        /* This is an method about Fragment
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        fragmentManager.beginTransaction().replace(R.id.move_layout, MoveBookmarkFragment.newInstance()).commit();
+                                        */
+
                                         Snackbar.make(getView(), "북마크를 삭제했어염", Snackbar.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getActivity(), BookmarkActivity.class);
+                                        getActivity().finish();
+                                        startActivity(intent);
+                                        getActivity().overridePendingTransition(0, 0);
                                     }
                                 }
                             })

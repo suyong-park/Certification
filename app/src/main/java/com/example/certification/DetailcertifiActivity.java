@@ -50,7 +50,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
         setContentView(R.layout.detailcertifi);
 
         Intent intent = getIntent();
-        category = intent.getStringExtra("detailcertifi");  // detailcertifi of certification
+        category = intent.getStringExtra("category");  // category of certification
 
         setTitle(category);
 

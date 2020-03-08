@@ -10,7 +10,6 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PreferenceManager.setBoolean(getApplicationContext(), "close", false);
         //PreferenceManager.clear(getApplicationContext()); // for test !!!
 
         Intent it = new Intent(this, MainActivity.class);

@@ -20,7 +20,6 @@ public class TransparentActivity extends AppCompatActivity {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferenceManager.setBoolean(getApplicationContext(), "close", true);
                 finish();
                 overridePendingTransition(0, 0);
             }
