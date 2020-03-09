@@ -110,7 +110,7 @@ public class MaincertifiActivity extends AppCompatActivity {
 
     public void ConnectDB() {
 
-        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_certifi>> call = connectDB.title_data();
 
         call.enqueue(new Callback<List<Recycler_certifi>>() {

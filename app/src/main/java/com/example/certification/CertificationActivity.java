@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -137,7 +136,7 @@ public class CertificationActivity extends AppCompatActivity {
     }
 
     public void ConnectDB() {
-        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_certifidetail>> call = connectDB.certification_data();
 
         call.enqueue(new Callback<List<Recycler_certifidetail>>() {

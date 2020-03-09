@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -95,7 +96,7 @@ public class DeleteBookmarkFragment extends Fragment {
                                         fragmentManager.beginTransaction().replace(R.id.move_layout, MoveBookmarkFragment.newInstance()).commit();
                                         */
 
-                                        Snackbar.make(getView(), "북마크를 삭제했어염", Snackbar.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "북마크가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(getActivity(), BookmarkActivity.class);
                                         getActivity().finish();
                                         startActivity(intent);

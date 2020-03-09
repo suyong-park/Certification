@@ -1,6 +1,5 @@
 package com.example.certification;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -113,7 +111,7 @@ public class MainjobActivity extends AppCompatActivity {
 
     public void ConnectDB() {
 
-        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_job>> call = connectDB.category_data();
 
         call.enqueue(new Callback<List<Recycler_job>>() {

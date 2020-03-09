@@ -25,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,7 +137,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
     public void ConnectDB() {
 
-        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_certifi>> call = connectDB.title_data();
 
         call.enqueue(new Callback<List<Recycler_certifi>>() {

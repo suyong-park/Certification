@@ -89,7 +89,7 @@ public class JobActivity extends AppCompatActivity {
     }
 
     public void ConnectDB() {
-        ConnectDB connectDB = Request.getRetrofit().create(ConnectDB.class);
+        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_jobdetail>> call = connectDB.job_data();
 
         call.enqueue(new Callback<List<Recycler_jobdetail>>() {

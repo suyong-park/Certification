@@ -6,13 +6,13 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -21,6 +21,7 @@ public class MoveBookmarkFragment extends Fragment {
     ArrayList<String> items;
     ArrayAdapter<String> adapter;
     ListView listView;
+    TextView blank;
 
     String num;
 
@@ -28,7 +29,7 @@ public class MoveBookmarkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_move_bookmark, container, false);
 
-        Log.d("", "2번입니당");
+        blank = (TextView) view.findViewById(R.id.blank_components);
 
         ActionBar actionBar = ((BookmarkActivity)getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -41,6 +42,11 @@ public class MoveBookmarkFragment extends Fragment {
         listView.setChoiceMode(listView.CHOICE_MODE_SINGLE);
 
         addList();
+
+        if(adapter.getCount() == 0)
+            blank.setVisibility(View.VISIBLE);
+        else
+            blank.setVisibility(View.GONE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
