@@ -20,18 +20,36 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="locked"
             android:label="@string/title_activity_main"
-            android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".BookmarkActivity" />
-        <activity android:name=".CertificationActivity" />
-        <activity android:name=".DetailcertifiActivity" />
-        <activity android:name=".DetailjobActivity" />
-        <activity android:name=".JobActivity" />
-        <activity android:name=".MaincertifiActivity" />
-        <activity android:name=".MainjobActivity" />
+        <activity
+            android:name=".BookmarkActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".CalendarActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".CertificationActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".DetailcertifiActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".DetailjobActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".JobActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".MaincertifiActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".MainjobActivity"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="locked"
             android:theme="@style/splash_background">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,6 +58,7 @@
         </activity>
         <activity
             android:name=".TransparentActivity"
+            android:screenOrientation="locked"
             android:theme="@style/Transparent"></activity>
     </application>
 

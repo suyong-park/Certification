@@ -37,9 +37,6 @@ public class DeleteBookmarkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_delete_bookmark, container, false);
 
-        ActionBar actionBar = ((BookmarkActivity)getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-
         delete = (Button) view.findViewById(R.id.delete);
         listView = (ListView) view.findViewById(R.id.listview_delete);
 

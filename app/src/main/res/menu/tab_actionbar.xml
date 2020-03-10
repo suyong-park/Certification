@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/tab1"
-        app:showAsAction="ifRoom"
+        android:id="@+id/folder_add"
         android:enabled="true"
-        android:title="이동"
+        app:showAsAction="never"
+        android:title="폴더 추가"
         />
 
     <item
-        android:id="@+id/tab2"
-        app:showAsAction="ifRoom"
+        android:id="@+id/folder_delete"
         android:enabled="true"
-        android:title="삭제"
+        app:showAsAction="never"
+        android:title="폴더 삭제"
         />
 </menu>

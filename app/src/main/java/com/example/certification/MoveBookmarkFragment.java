@@ -30,10 +30,6 @@ public class MoveBookmarkFragment extends Fragment {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_move_bookmark, container, false);
 
         blank = (TextView) view.findViewById(R.id.blank_components);
-
-        ActionBar actionBar = ((BookmarkActivity)getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-
         listView = (ListView) view.findViewById(R.id.listview_move);
 
         items = new ArrayList<String>();

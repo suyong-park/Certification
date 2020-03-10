@@ -20,7 +20,4 @@ public interface ConnectDB {
 
     @POST("detail_job.php")
     Call<List<Recycler_jobdetail>> job_data();
-
-    @POST("git_parser.php")
-    Call<String> parsing_data();
 }
