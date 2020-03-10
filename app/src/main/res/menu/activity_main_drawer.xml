@@ -25,6 +25,9 @@
     <item android:title="Communicate">
         <menu>
             <item
+                android:id="@+id/web"
+                android:title="@string/menu_website" />
+            <item
                 android:id="@+id/share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/menu_share" />

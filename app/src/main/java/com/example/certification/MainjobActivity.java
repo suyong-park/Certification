@@ -1,15 +1,12 @@
 package com.example.certification;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -173,7 +170,7 @@ public class MainjobActivity extends AppCompatActivity {
 
         @Override
         public MainjobActivity.MainjobAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_titlelist, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_title_temp, viewGroup, false);
             return new MainjobActivity.MainjobAdapter.ViewHolder(view);
         }
 

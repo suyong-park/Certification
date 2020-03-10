@@ -213,7 +213,7 @@ public class CertificationActivity extends AppCompatActivity {
 
         @Override
         public CertificationActivity.CertificationDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_certifidetail, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_certifi_detail, viewGroup, false);
             return new CertificationActivity.CertificationDetailAdapter.ViewHolder(view);
         }
 

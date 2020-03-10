@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
-
     <item
-        android:id="@+id/folder_add"
-        android:enabled="true"
+        android:id="@+id/word_sort"
         app:showAsAction="never"
-        android:title="폴더 추가"
+        android:enabled="true"
+        android:title="글자순 정렬"
         />
 
     <item
-        android:id="@+id/folder_delete"
-        android:enabled="true"
+        android:id="@+id/time_sort"
         app:showAsAction="never"
-        android:title="폴더 삭제"
+        android:enabled="true"
+        android:title="시간순 정렬"
         />
 </menu>

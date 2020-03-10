@@ -1,33 +1,40 @@
 package com.example.certification;
 
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookmarkActivity extends AppCompatActivity {
 
-    // TODO : 폴더 생성했을 때 생성되는 리스트
+    private BookmarkAdapter mAdapter;
+    public GestureDetector gesture_detector;
+    List<Recycler_title> mlist = new ArrayList<>();
 
-    PagerAdapter adapter;
-    ViewPager pager;
+    TextView blank;
+    LinearLayout bookmark_layout;
 
-    MoveBookmarkFragment fragment1;
-    DeleteBookmarkFragment fragment2;
+    String num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,60 +44,61 @@ public class BookmarkActivity extends AppCompatActivity {
         setTitle("북마크");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        pager = findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(2);
+        Intent intent = getIntent();
 
-        adapter = new PagerAdapter(getSupportFragmentManager());
+        blank = (TextView) findViewById(R.id.blank_components);
+        bookmark_layout = (LinearLayout) findViewById(R.id.bookmark_layout);
 
-        fragment1 = new MoveBookmarkFragment();
-        fragment2 = new DeleteBookmarkFragment();
-        adapter.addItem(fragment1);
-        adapter.addItem(fragment2);
-        pager.setAdapter(adapter);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        mAdapter = new BookmarkAdapter();
+        recyclerView.setAdapter(mAdapter);
 
-        final BottomNavigationView bottom = findViewById(R.id.bottom_navigation);
-        bottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.tab1:
-                        pager.setCurrentItem(0);
-                        break;
-                    case R.id.tab2:
-                        pager.setCurrentItem(1);
-                        break;
-                }
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        addBookmark();
+
+        if(mAdapter.getItemCount() == 0)
+            blank.setVisibility(View.VISIBLE);
+        else
+            blank.setVisibility(View.GONE);
+
+        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
 
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            // Connecting ViewPager and BottomNavigationView
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
+        {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                View childView = rv.findChildViewUnder(e.getX(), e.getY());
 
-            @Override
-            public void onPageSelected(int position) { // Operate if you slide another tab.
-                switch (position) {
-                    case 0:
-                        bottom.getMenu().findItem(R.id.tab1).setChecked(true);
-                        break;
-                    case 1:
-                        bottom.getMenu().findItem(R.id.tab2).setChecked(true);
-                        break;
+                if(childView != null && gesture_detector.onTouchEvent((e))) {
+                    int currentPos = rv.getChildAdapterPosition(childView);
+                    Intent it = new Intent(BookmarkActivity.this, CertificationActivity.class);
+                    it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
+                    it.putExtra("num", num);
+                    startActivity(it);
+                    return true;
                 }
+                return false;
             }
-
             @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            }
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.tab_actionbar, menu);
+        getMenuInflater().inflate(R.menu.tab_bookmarksort, menu);
         return true;
     }
 
@@ -100,72 +108,106 @@ public class BookmarkActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
-            case R.id.folder_add:
-                onRecursive();
+            case R.id.word_sort:
+                Toast.makeText(getApplicationContext(), "글자순", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.folder_delete:
-                Toast.makeText(getApplicationContext(), "폴더 삭제", Toast.LENGTH_SHORT).show();
+            case R.id.time_sort:
+                Toast.makeText(getApplicationContext(), "시간순", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void onRecursive() {
-        final EditText folder_name = new EditText(getApplicationContext());
+    public void addBookmark() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(BookmarkActivity.this);
-        builder.setTitle("폴더 생성")
-                .setMessage("폴더 이름을 입력하세요")
-                .setView(folder_name)
-                .setPositiveButton("생성", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                            if(folder_name.getText().toString().trim().equals("")) {
-                                AlertDialog.Builder sub = new AlertDialog.Builder(BookmarkActivity.this);
-                                sub.setTitle("에러")
-                                        .setMessage("폴더 이름을 입력하세요.")
-                                        .setCancelable(false)
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                onRecursive();
-                                                return ;
-                                            }
-                                        }).show();
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(), "폴더 추가" + folder_name.getText().toString().trim(), Toast.LENGTH_SHORT).show();
-                            }
-                    }
-                })
-                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        return ;
-                    }
-                }).show();
+        int max;
+        String text;
+
+        try {
+            max = Integer.parseInt(PreferenceManager.getString_max(getApplicationContext(), "value")); // max value
+
+            for(int i = 1; i <= max; i++) {
+                String temp = String.valueOf(i);
+                text = PreferenceManager.getString(getApplicationContext(), temp);
+                if(!text.equals("")) {
+                    mAdapter.add(new Recycler_title(text));
+                    num = temp;
+                }
+            }
+        }
+        catch (NumberFormatException e) {
+        }
     }
 
-    class PagerAdapter extends FragmentStatePagerAdapter {
+    class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder> {
 
-        ArrayList<Fragment> items = new ArrayList<Fragment>();
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                title = (TextView) itemView.findViewById(R.id.item);
+            }
+
+            public void setData(Recycler_title data) {
+                title.setText(data.getTitle());
+            }
         }
 
-        public void addItem(Fragment item) {
-            items.add(item);
+        public void add(Recycler_title item) {
+            mlist.add(item);
+            notifyDataSetChanged();
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return items.get(position);
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_title_bookmark, viewGroup, false);
+            return new ViewHolder(view);
         }
 
         @Override
-        public int getCount() {
-            return items.size();
+        public void onBindViewHolder(@NonNull ViewHolder viewholder, int position) { // Define properties of Recycler View items.
+            viewholder.setData(mlist.get(position));
+        }
+
+        @Override
+        public int getItemCount() { // Count of Recycler View items.
+            return mlist.size();
+        }
+
+        public Recycler_title getRecycler_title(int pos) {
+            return mlist.get(pos);
         }
     }
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            final int position = viewHolder.getAdapterPosition();
+
+            int max = Integer.parseInt(PreferenceManager.getString_max(getApplicationContext(), "value")); // max value
+
+            for (int i = 1; i <= max; i++) {
+                String temp_num = String.valueOf(i);
+                String tmp = PreferenceManager.getString(getApplicationContext(), temp_num);
+                if (tmp.equals(mlist.get(position).getTitle())) {
+                    mlist.remove(position);
+                    PreferenceManager.removeKey(getApplicationContext(), temp_num);
+                    break;
+                }
+            }
+            if(mAdapter.getItemCount() == 0) {
+                Snackbar.make(bookmark_layout, "북마크가 모두 지워졌군요!", Snackbar.LENGTH_SHORT).show();
+                blank.setVisibility(View.VISIBLE);
+            }
+
+            mAdapter.notifyItemRemoved(position);
+        }
+    };
 }

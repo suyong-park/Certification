@@ -166,7 +166,7 @@ public class JobActivity extends AppCompatActivity {
 
         @Override
         public JobActivity.JobDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_jobdetail, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_job_detail, viewGroup, false);
             return new JobActivity.JobDetailAdapter.ViewHolder(view);
         }
 

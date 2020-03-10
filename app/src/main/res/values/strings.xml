@@ -13,6 +13,7 @@
     <string name="menu_job">진출직종 화면으로!</string>
     <string name="menu_bookmark">북마크 화면으로!</string>
     <string name="menu_home">달력으로 일정확인!</string>
+    <string name="menu_website">웹사이트로 보기!</string>
     <string name="menu_share">친구들에게 공유하기!</string>
     <string name="menu_send">개발자에게 조언하기!</string>
 </resources>

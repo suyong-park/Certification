@@ -177,7 +177,7 @@ public class DetailjobActivity extends AppCompatActivity {
 
         @Override
         public DetailjobActivity.DetailjobAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_titlelist, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_title_temp, viewGroup, false);
             return new DetailjobActivity.DetailjobAdapter.ViewHolder(view);
         }
 

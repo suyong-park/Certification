@@ -33,4 +33,10 @@
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle" />
 
+    <Switch
+        android:id="@+id/switch_push"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="푸시알림" />
+
 </LinearLayout>

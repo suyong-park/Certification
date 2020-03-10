@@ -1,28 +1,35 @@
 package com.example.certification;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.sip.SipSession;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -31,6 +38,10 @@ import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 // TODO : 앱 버전 플레이스토어에서 확인한 후 구 버전인 경우 업데이트 하도록 권고.
+
+    NotificationManager manager;
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANNEL_NAME = "Channel1";
 
     EditText editText;
     DrawerLayout drawer;
@@ -83,20 +94,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View navigation = navigationView.getHeaderView(0);
+        final View navigation = navigationView.getHeaderView(0);
         TextView version = (TextView) navigation.findViewById(R.id.version);
         version.setText("version : " + getVersionInfo(getApplicationContext()));
+
+        Switch push = (Switch) navigation.findViewById(R.id.switch_push);
+        boolean state = PreferenceManager.getBoolean(getApplicationContext(),"switch");
+        if(state)
+            push.setChecked(true);
+        else if(!state)
+            push.setChecked(false);
+        push.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked) {
+                    PreferenceManager.setBoolean(getApplicationContext(), "switch", isChecked);
+                    Snackbar.make(navigationView, "푸시알림 허용하셨습니다.", Snackbar.LENGTH_SHORT).show();
+                    showNotice();
+                }
+                else {
+                    PreferenceManager.setBoolean(getApplicationContext(), "switch", isChecked);
+                    Snackbar.make(navigationView, "푸시알림 거부하셨습니다.", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         if(drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        else
-            super.onBackPressed();
+        else {
+            Snackbar.make(drawer, "정말 그만볼꺼에요?", Snackbar.LENGTH_SHORT)
+                    .setAction("넹", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    })
+                    .setDuration(1700)
+                    .show();
+        }
     }
 
     @Override
@@ -119,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
             startActivity(intent);
         }
+        else if(id == R.id.web) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
+            startActivity(intent);
+        }
         else if(id == R.id.share) {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
@@ -139,6 +185,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showNotice() {
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder builder = null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (manager.getNotificationChannel(CHANNEL_ID) == null)
+                manager.createNotificationChannel(new NotificationChannel(
+                        CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
+                ));
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        }
+        else
+            builder = new NotificationCompat.Builder(getApplicationContext());
+
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentTitle("Basic Push Message")
+                .setContentText("푸시알림에 동의하셨습니다.")
+                .setSmallIcon(android.R.drawable.ic_menu_view)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        Notification noti = builder.build();
+        manager.notify(2, noti);
     }
 
     public void downKeyboard() {
