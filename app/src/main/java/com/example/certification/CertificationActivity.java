@@ -171,13 +171,13 @@ public class CertificationActivity extends AppCompatActivity {
 
     public void ConnectDB() {
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
-        Call<List<Recycler_certifidetail>> call = connectDB.certification_data();
+        Call<List<Recycler_certification>> call = connectDB.certification_data();
 
-        call.enqueue(new Callback<List<Recycler_certifidetail>>() {
+        call.enqueue(new Callback<List<Recycler_certification>>() {
             @Override
 
-            public void onResponse(Call<List<Recycler_certifidetail>> call, Response<List<Recycler_certifidetail>> response) {
-                List<Recycler_certifidetail> result = response.body();
+            public void onResponse(Call<List<Recycler_certification>> call, Response<List<Recycler_certification>> response) {
+                List<Recycler_certification> result = response.body();
 
                 if(result != null)
                     if (result.size() != 0)
@@ -185,11 +185,11 @@ public class CertificationActivity extends AppCompatActivity {
                             if(max <= result.get(i).getNUM())
                                 max = result.get(i).getNUM();
                             if (title.contains(result.get(i).getNAME()))
-                                mAdapter.add(new Recycler_certifidetail(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_NAME(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
+                                mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_NAME(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
                         }
             }
             @Override
-            public void onFailure(Call<List<Recycler_certifidetail>> call, Throwable t) {
+            public void onFailure(Call<List<Recycler_certification>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
@@ -197,7 +197,7 @@ public class CertificationActivity extends AppCompatActivity {
 
     class CertificationDetailAdapter extends RecyclerView.Adapter<CertificationActivity.CertificationDetailAdapter.ViewHolder> {
 
-        List<Recycler_certifidetail> mlist = new ArrayList<>();
+        List<Recycler_certification> mlist = new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -226,7 +226,7 @@ public class CertificationActivity extends AppCompatActivity {
                 announcement_date = (TextView) itemView.findViewById(R.id.announcement_date);
             }
 
-            public void setData(Recycler_certifidetail data) {
+            public void setData(Recycler_certification data) {
                 name.setText("이름 : " + data.getNAME());
                 description.setText("자격증 내용 : " + data.getDESCRIPTION());
                 company.setText("관련 회사 : " + data.getCOMPANY());
@@ -240,14 +240,14 @@ public class CertificationActivity extends AppCompatActivity {
             }
         }
 
-        public void add(Recycler_certifidetail item) {
+        public void add(Recycler_certification item) {
             mlist.add(item);
             notifyDataSetChanged();
         }
 
         @Override
         public CertificationActivity.CertificationDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_certifi_detail, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_certification, viewGroup, false);
             return new CertificationActivity.CertificationDetailAdapter.ViewHolder(view);
         }
 

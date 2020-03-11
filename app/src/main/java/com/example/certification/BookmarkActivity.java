@@ -3,7 +3,6 @@ package com.example.certification;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +30,7 @@ public class BookmarkActivity extends AppCompatActivity {
     public static Activity BookmarkActivity;
     private BookmarkAdapter mAdapter;
     public GestureDetector gesture_detector;
-    List<Recycler_title> mlist = new ArrayList<>();
+    List<Recycler_bookmark> mlist = new ArrayList<>();
 
     TextView blank;
     LinearLayout bookmark_layout;
@@ -123,7 +121,7 @@ public class BookmarkActivity extends AppCompatActivity {
                 mlist.removeAll(mlist);
 
                 for(int i = 0; i < array.length; i++)
-                    mAdapter.add(new Recycler_title(array[i]));
+                    mAdapter.add(new Recycler_bookmark(array[i]));
                 mAdapter.notifyDataSetChanged();
                 return true;
             default:
@@ -143,7 +141,7 @@ public class BookmarkActivity extends AppCompatActivity {
                 String temp = String.valueOf(i);
                 text = PreferenceManager.getString(getApplicationContext(), temp);
                 if(!text.equals("")) {
-                    mAdapter.add(new Recycler_title(text));
+                    mAdapter.add(new Recycler_bookmark(text));
                     num = temp;
                 }
             }
@@ -159,15 +157,15 @@ public class BookmarkActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                title = (TextView) itemView.findViewById(R.id.item);
+                title = (TextView) itemView.findViewById(R.id.title);
             }
 
-            public void setData(Recycler_title data) {
+            public void setData(Recycler_bookmark data) {
                 title.setText(data.getTitle());
             }
         }
 
-        public void add(Recycler_title item) {
+        public void add(Recycler_bookmark item) {
             mlist.add(item);
             notifyDataSetChanged();
         }
@@ -188,7 +186,7 @@ public class BookmarkActivity extends AppCompatActivity {
             return mlist.size();
         }
 
-        public Recycler_title getRecycler_title(int pos) {
+        public Recycler_bookmark getRecycler_title(int pos) {
             return mlist.get(pos);
         }
     }

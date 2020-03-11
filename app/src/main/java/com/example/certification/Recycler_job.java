@@ -2,25 +2,43 @@ package com.example.certification;
 
 public class Recycler_job {
 
-    String JOB_NAME;
-    String JOB_CATEGORY;
+    String NAME;
+    String CATEGORY;
+    String DESCRIPTION;
+    String LINK;
     String NUM;
+    String CERTIFICATION_NAME;
 
-    public Recycler_job(String JOB_NAME, String JOB_CATEGORY, String NUM) {
-        this.JOB_NAME = JOB_NAME;
-        this.JOB_CATEGORY = JOB_CATEGORY;
+    public Recycler_job(String NAME, String CATEGORY, String DESCRIPTION, String LINK, String NUM, String CERTIFICATION_NAME) {
+        this.NAME = NAME;
+        this.CATEGORY = CATEGORY;
+        this.DESCRIPTION = DESCRIPTION;
+        this.LINK = LINK;
         this.NUM = NUM;
+        this.CERTIFICATION_NAME = CERTIFICATION_NAME;
     }
 
-    public String getNUM() {
+    public String getName() {
+        return NAME;
+    }
+
+    public String getCertification_name() {
+        return CERTIFICATION_NAME;
+    }
+
+    public String getCategory() {
+        return CATEGORY;
+    }
+
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    public String getLink() {
+        return LINK;
+    }
+
+    public String getNum() {
         return NUM;
-    }
-
-    public String getJOB_CATEGORY() {
-        return JOB_CATEGORY;
-    }
-
-    public String getJOB_NAME() {
-        return JOB_NAME;
     }
 }

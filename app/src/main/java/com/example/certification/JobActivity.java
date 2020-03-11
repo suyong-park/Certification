@@ -96,24 +96,24 @@ public class JobActivity extends AppCompatActivity {
 
     public void ConnectDB() {
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
-        Call<List<Recycler_jobdetail>> call = connectDB.job_data();
+        Call<List<Recycler_job>> call = connectDB.job_data();
 
-        call.enqueue(new Callback<List<Recycler_jobdetail>>() {
+        call.enqueue(new Callback<List<Recycler_job>>() {
             @Override
-            public void onResponse(Call<List<Recycler_jobdetail>> call, Response<List<Recycler_jobdetail>> response) {
-                List<Recycler_jobdetail> result = response.body();
+            public void onResponse(Call<List<Recycler_job>> call, Response<List<Recycler_job>> response) {
+                List<Recycler_job> result = response.body();
 
                 if(result != null)
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++)
-                            if(name.equals(result.get(i).getJOB_NAME())) {
-                                mAdapter.add(new Recycler_jobdetail(result.get(i).getJOB_NAME(), result.get(i).getJOB_CATEGORY(), result.get(i).getDESCRIPTION(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getNAME()));
-                                certification = result.get(i).getNAME();
-                                certification_num = result.get(i).getNUM();
+                            if(name.equals(result.get(i).getName())) {
+                                mAdapter.add(new Recycler_job(result.get(i).getName(), result.get(i).getCategory(), result.get(i).getDescription(), result.get(i).getLink(), result.get(i).getNum(), result.get(i).getCertification_name()));
+                                certification = result.get(i).getCertification_name();
+                                certification_num = result.get(i).getNum();
                             }
             }
             @Override
-            public void onFailure(Call<List<Recycler_jobdetail>> call, Throwable t) {
+            public void onFailure(Call<List<Recycler_job>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
@@ -152,7 +152,7 @@ public class JobActivity extends AppCompatActivity {
 
     class JobDetailAdapter extends RecyclerView.Adapter<JobActivity.JobDetailAdapter.ViewHolder> {
 
-        List<Recycler_jobdetail> mlist = new ArrayList<>();
+        List<Recycler_job> mlist = new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -169,22 +169,22 @@ public class JobActivity extends AppCompatActivity {
                 name = (TextView) itemView.findViewById(R.id.name);
             }
 
-            public void setData(Recycler_jobdetail data) {
-                job_name.setText("직업 이름 : " + data.getJOB_NAME());
-                description.setText("직업 설명 : " + data.getDESCRIPTION());
-                link.setText("관련 링크 : " + data.getLINK());
-                name.setText("관련 자격증 : " + data.getNAME());
+            public void setData(Recycler_job data) {
+                job_name.setText("직업 이름 : " + data.getName());
+                description.setText("직업 설명 : " + data.getDescription());
+                link.setText("관련 링크 : " + data.getLink());
+                name.setText("관련 자격증 : " + data.getCertification_name());
             }
         }
 
-        public void add(Recycler_jobdetail item) {
+        public void add(Recycler_job item) {
             mlist.add(item);
             notifyDataSetChanged();
         }
 
         @Override
         public JobActivity.JobDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_job_detail, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_job, viewGroup, false);
             return new JobActivity.JobDetailAdapter.ViewHolder(view);
         }
 

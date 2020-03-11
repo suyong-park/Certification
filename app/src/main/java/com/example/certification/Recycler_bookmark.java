@@ -1,10 +1,10 @@
 package com.example.certification;
 
-public class Recycler_title {
+public class Recycler_bookmark {
 
     String title;
 
-    public Recycler_title(String title) {
+    public Recycler_bookmark(String title) {
         this.title = title;
     }
 

@@ -37,6 +37,12 @@
         android:id="@+id/switch_push"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="푸시알림" />
+        android:thumb="@drawable/switch_thumb"
+        android:track="@drawable/switch_track_selector"
+        android:switchMinWidth="0dp"
+        android:textOff=""
+        android:textOn=""
+        android:thumbTextPadding="15dp"
+        android:text="날짜알림이" />
 
 </LinearLayout>

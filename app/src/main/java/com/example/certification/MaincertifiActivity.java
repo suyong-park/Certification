@@ -46,7 +46,7 @@ public class MaincertifiActivity extends AppCompatActivity {
         setTitle("자격증");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.category_certification);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new MaincertifiAdapter();
@@ -91,12 +91,10 @@ public class MaincertifiActivity extends AppCompatActivity {
 
             @Override
             public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
             }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
             }
         });
 
@@ -115,12 +113,12 @@ public class MaincertifiActivity extends AppCompatActivity {
     public void ConnectDB() {
 
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
-        Call<List<Recycler_certifi>> call = connectDB.title_data();
+        Call<List<Recycler_category>> call = connectDB.certification_category_data();
 
-        call.enqueue(new Callback<List<Recycler_certifi>>() {
+        call.enqueue(new Callback<List<Recycler_category>>() {
             @Override
-            public void onResponse(Call<List<Recycler_certifi>> call, Response<List<Recycler_certifi>> response) {
-                List<Recycler_certifi> result = response.body();
+            public void onResponse(Call<List<Recycler_category>> call, Response<List<Recycler_category>> response) {
+                List<Recycler_category> result = response.body();
 
                 if(result != null)
                     if (result.size() != 0)
@@ -133,12 +131,12 @@ public class MaincertifiActivity extends AppCompatActivity {
                             else if(result.get(i).getCategory().contains("전문"))
                                 certifi_title = "국가전문자격증";
                             if(!temp.equals(certifi_title))
-                                mAdapter.add(new Recycler_certifi(result.get(i).getTitle(), certifi_title, result.get(i).getNum()));
+                                mAdapter.add(new Recycler_category(result.get(i).getTitle(), certifi_title, result.get(i).getNum()));
                         }
             }
 
             @Override
-            public void onFailure(Call<List<Recycler_certifi>> call, Throwable t) {
+            public void onFailure(Call<List<Recycler_category>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
@@ -156,7 +154,7 @@ public class MaincertifiActivity extends AppCompatActivity {
 
     class MaincertifiAdapter extends RecyclerView.Adapter<MaincertifiActivity.MaincertifiAdapter.ViewHolder> {
 
-        List<Recycler_certifi> mlist = new ArrayList<>();
+        List<Recycler_category> mlist = new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -164,22 +162,22 @@ public class MaincertifiActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                title = (TextView) itemView.findViewById(R.id.item);
+                title = (TextView) itemView.findViewById(R.id.title);
             }
 
-            public void setData(Recycler_certifi data) {
+            public void setData(Recycler_category data) {
                 title.setText(data.getCategory());
             }
         }
 
-        public void add(Recycler_certifi item) {
+        public void add(Recycler_category item) {
             mlist.add(item);
             notifyDataSetChanged();
         }
 
         @Override
         public MaincertifiActivity.MaincertifiAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_title_temp, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_category, viewGroup, false);
             return new MaincertifiActivity.MaincertifiAdapter.ViewHolder(view);
         }
 
@@ -193,7 +191,7 @@ public class MaincertifiActivity extends AppCompatActivity {
             return mlist.size();
         }
 
-        public Recycler_certifi getRecycler_title(int pos) {
+        public Recycler_category getRecycler_title(int pos) {
             return mlist.get(pos);
         }
     }
