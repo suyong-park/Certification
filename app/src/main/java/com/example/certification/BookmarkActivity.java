@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,10 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BookmarkActivity extends AppCompatActivity {
 
+    public static Activity BookmarkActivity;
     private BookmarkAdapter mAdapter;
     public GestureDetector gesture_detector;
     List<Recycler_title> mlist = new ArrayList<>();
@@ -40,6 +43,8 @@ public class BookmarkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookmark);
+
+        BookmarkActivity = BookmarkActivity.this;
 
         setTitle("북마크");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,6 +87,7 @@ public class BookmarkActivity extends AppCompatActivity {
                     Intent it = new Intent(BookmarkActivity.this, CertificationActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     it.putExtra("num", num);
+                    it.putExtra("bookmark", true);
                     startActivity(it);
                     return true;
                 }
@@ -109,10 +115,16 @@ public class BookmarkActivity extends AppCompatActivity {
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
             case R.id.word_sort:
-                Toast.makeText(getApplicationContext(), "글자순", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.time_sort:
-                Toast.makeText(getApplicationContext(), "시간순", Toast.LENGTH_SHORT).show();
+                String[] array = new String[mAdapter.getItemCount()];
+
+                for(int i = 0; i < array.length; i++)
+                    array[i] = mlist.get(i).getTitle();
+                Arrays.sort(array);
+                mlist.removeAll(mlist);
+
+                for(int i = 0; i < array.length; i++)
+                    mAdapter.add(new Recycler_title(array[i]));
+                mAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -189,8 +201,8 @@ public class BookmarkActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            final int position = viewHolder.getAdapterPosition();
 
+            final int position = viewHolder.getAdapterPosition();
             int max = Integer.parseInt(PreferenceManager.getString_max(getApplicationContext(), "value")); // max value
 
             for (int i = 1; i <= max; i++) {

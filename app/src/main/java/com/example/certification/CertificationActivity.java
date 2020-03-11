@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,9 +39,10 @@ public class CertificationActivity extends AppCompatActivity {
     private CertificationDetailAdapter mAdapter;
     ProgressDialog dialog;
     Handler handler = new Handler();
+    LinearLayout certification_layout;
 
-    String title;
-    String num;
+    boolean fact, from_bookmark;
+    String title, num;
     int max = 1;
 
     Button bookmark;
@@ -53,11 +56,14 @@ public class CertificationActivity extends AppCompatActivity {
 
         title = intent.getStringExtra("name");  // name of certification
         num = intent.getStringExtra("num");
+        fact = intent.getBooleanExtra("job", false);
+        from_bookmark = intent.getBooleanExtra("bookmark", false);
 
         setTitle(title);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
         bookmark = (Button) findViewById(R.id.bookmark);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
@@ -117,11 +123,39 @@ public class CertificationActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tab_to_home, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home :
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
+            case R.id.icon_home :
+                if(fact) {
+                    JobActivity job = (JobActivity) JobActivity.JobActivity;
+                    MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
+                    DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
+                    finish();
+                    job.finish();
+                    detailjob.finish();
+                    mainjob.finish();
+                }
+                else if(from_bookmark) {
+                    BookmarkActivity bookmarkActivity = (BookmarkActivity) BookmarkActivity.BookmarkActivity;
+                    finish();
+                    bookmarkActivity.finish();
+                }
+                else if(!fact && !from_bookmark){
+                    MaincertifiActivity maincertifi = (MaincertifiActivity) MaincertifiActivity.MaincertifiActivity;
+                    DetailcertifiActivity detailcertifi = (DetailcertifiActivity) DetailcertifiActivity.DetailcertifiActivity;
+                    finish();
+                    detailcertifi.finish();
+                    maincertifi.finish();
+                }
         }
         return super.onOptionsItemSelected(item);
     }

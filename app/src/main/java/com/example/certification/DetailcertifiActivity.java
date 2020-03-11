@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,6 +35,7 @@ import retrofit2.Response;
 
 public class DetailcertifiActivity extends AppCompatActivity {
 
+    public static Activity DetailcertifiActivity;
     private CertificationTitleAdapter mAdapter;
     public GestureDetector gesture_detector;
 
@@ -47,6 +49,8 @@ public class DetailcertifiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailcertifi);
+
+        DetailcertifiActivity = DetailcertifiActivity.this;
 
         Intent intent = getIntent();
         category = intent.getStringExtra("category");  // category of certification

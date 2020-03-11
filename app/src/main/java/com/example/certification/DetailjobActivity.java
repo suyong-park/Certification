@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 
 public class DetailjobActivity extends AppCompatActivity {
 
+    public static Activity DetailjobActivity;
     private DetailjobAdapter mAdapter;
     public GestureDetector gesture_detector;
     Handler handler = new Handler();
@@ -45,6 +47,8 @@ public class DetailjobActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailjob);
+
+        DetailjobActivity = DetailjobActivity.this;
 
         Intent intent = getIntent();
         title = intent.getStringExtra("category");

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -199,11 +200,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         }
         else
-            builder = new NotificationCompat.Builder(getApplicationContext());
+            builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentTitle("Basic Push Message")
+        builder.setContentTitle("자격증어플 입니다.")
                 .setContentText("푸시알림에 동의하셨습니다.")
                 .setSmallIcon(android.R.drawable.ic_menu_view)
                 .setAutoCancel(true)

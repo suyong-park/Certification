@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="7dp"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:background="#ffe5ea"/>
+        android:textSize="24sp"
+        android:fontFamily="@font/font_bookmark"
+        android:gravity="center" />
 
 </LinearLayout>

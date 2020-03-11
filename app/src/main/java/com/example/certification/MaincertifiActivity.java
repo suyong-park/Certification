@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import retrofit2.Response;
 
 public class MaincertifiActivity extends AppCompatActivity {
 
+    public static Activity MaincertifiActivity;
     private MaincertifiAdapter mAdapter;
     public GestureDetector gesture_detector;
     String certifi_title = "";
@@ -38,6 +40,8 @@ public class MaincertifiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maincertifi);
+
+        MaincertifiActivity = MaincertifiActivity.this;
 
         setTitle("자격증");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

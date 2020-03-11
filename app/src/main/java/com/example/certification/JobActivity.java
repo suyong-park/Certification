@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,7 @@ import retrofit2.Response;
 
 public class JobActivity extends AppCompatActivity {
 
+    public static Activity JobActivity;
     Handler handler = new Handler();
     private JobDetailAdapter mAdapter;
     ProgressDialog dialog;
@@ -42,6 +45,8 @@ public class JobActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job);
+
+        JobActivity = JobActivity.this;
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
@@ -83,6 +88,7 @@ public class JobActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
                 intent.putExtra("name", certification);
                 intent.putExtra("num", certification_num);
+                intent.putExtra("job", true);
                 startActivity(intent);
             }
         });
@@ -123,11 +129,23 @@ public class JobActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tab_to_home, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
+            case R.id.icon_home :
+                MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
+                DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
+                finish();
+                detailjob.finish();
+                mainjob.finish();
         }
         return super.onOptionsItemSelected(item);
     }
