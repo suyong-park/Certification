@@ -9,6 +9,10 @@
     <string name="nav_header_subtitle"></string>
     <string name="nav_header_desc">Navigation header</string>
 
+    <string name="next">다음</string>
+    <string name="skip">안볼래요!</string>
+    <string name="start">시작</string>
+
     <string name="menu_certification">자격증 화면으로!</string>
     <string name="menu_job">진출직종 화면으로!</string>
     <string name="menu_bookmark">북마크 화면으로!</string>

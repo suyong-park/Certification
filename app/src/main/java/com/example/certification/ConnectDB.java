@@ -3,6 +3,8 @@ package com.example.certification;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 public interface ConnectDB {
@@ -20,4 +22,10 @@ public interface ConnectDB {
 
     @POST("job_data.php")
     Call<List<Recycler_job>> job_data();
+
+    @FormUrlEncoded
+    @POST("search.php")
+    Call<String> search(
+            @Field("search") String search
+    );
 }

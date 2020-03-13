@@ -169,7 +169,7 @@ public class CertificationActivity extends AppCompatActivity {
             return false;
     }
 
-    public void ConnectDB() {
+    public void showCertification() {
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_certification>> call = connectDB.certification_data();
 
@@ -182,10 +182,10 @@ public class CertificationActivity extends AppCompatActivity {
                 if(result != null)
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++) {
-                            if(max <= result.get(i).getNUM())
-                                max = result.get(i).getNUM();
-                            if (title.contains(result.get(i).getNAME()))
-                                mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_NAME(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
+                                if (max <= result.get(i).getNUM())
+                                    max = result.get(i).getNUM();
+                                if (title.contains(result.get(i).getNAME()))
+                                    mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_CATEGORY(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
                         }
             }
             @Override
@@ -232,7 +232,7 @@ public class CertificationActivity extends AppCompatActivity {
                 company.setText("관련 회사 : " + data.getCOMPANY());
                 job.setText("관련 직종 : " + data.getJOB());
                 link.setText("관련 링크 : " + data.getLINK());
-                subject_name.setText("시험 과목 : " + data.getSUBJECT_NAME());
+                subject_name.setText("시험과목이 나와야됭 : " + data.getSUBJECT_CATEGORY());
                 receipt_date.setText("접수 날짜 : " + data.getRECEIPT_DATE());
                 written_date.setText("필기 시험 : " + data.getWRITTEN_DATE());
                 practical_date.setText("실기 시험 : " + data.getPRACTICAL_DATE());
@@ -277,7 +277,7 @@ public class CertificationActivity extends AppCompatActivity {
         protected Void doInBackground(Void ... values) {
 
             try {
-                ConnectDB();
+                showCertification();
             }
             catch (Exception e) {
                 e.printStackTrace();

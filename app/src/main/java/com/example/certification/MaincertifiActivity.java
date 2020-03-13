@@ -118,21 +118,32 @@ public class MaincertifiActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Recycler_category>>() {
             @Override
             public void onResponse(Call<List<Recycler_category>> call, Response<List<Recycler_category>> response) {
+
                 List<Recycler_category> result = response.body();
+                String[] array = new String[result.size()];
+                ArrayList<String> arrayList = new ArrayList<String>();
 
                 if(result != null)
-                    if (result.size() != 0)
+                    if (result.size() != 0) {
                         for (int i = 0; i < result.size(); i++) {
-                            String temp = certifi_title;
-                            if(result.get(i).getCategory().contains("기술"))
+
+                            if (result.get(i).getCategory().contains("기술"))
                                 certifi_title = "국가기술자격증";
-                            else if(result.get(i).getCategory().contains("민간"))
+                            else if (result.get(i).getCategory().contains("민간"))
                                 certifi_title = "민간자격증";
-                            else if(result.get(i).getCategory().contains("전문"))
+                            else if (result.get(i).getCategory().contains("전문"))
                                 certifi_title = "국가전문자격증";
-                            if(!temp.equals(certifi_title))
-                                mAdapter.add(new Recycler_category(result.get(i).getTitle(), certifi_title, result.get(i).getNum()));
+
+                            array[i] = certifi_title;
                         }
+                        for (String temp : array) {
+                            if (!arrayList.contains(temp))
+                                arrayList.add(temp);
+                        }
+                        for(int j = 0;j < arrayList.size(); j++) {
+                            mAdapter.add(new Recycler_category(result.get(j).getTitle(), arrayList.get(j), result.get(j).getNum()));
+                        }
+                    }
             }
 
             @Override
