@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class MainjobActivity extends AppCompatActivity {
 
         if(!isNetworkConnected())
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainjobActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainjobActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)

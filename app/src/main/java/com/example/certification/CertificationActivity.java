@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -65,15 +66,18 @@ public class CertificationActivity extends AppCompatActivity {
 
         certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
         bookmark = (Button) findViewById(R.id.bookmark);
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
+
+        if(from_bookmark)
+            bookmark.setVisibility(View.GONE);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new CertificationDetailAdapter();
         recyclerView.setAdapter(mAdapter);
 
         if (!isNetworkConnected()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CertificationActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)
@@ -100,7 +104,7 @@ public class CertificationActivity extends AppCompatActivity {
                     text = PreferenceManager.getString(getApplicationContext(), num);
                     if(!text.equals(""))
                     {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CertificationActivity.this);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
                         builder.setTitle("오류")
                                 .setMessage("이미 존재하는 북마크입니다.")
                                 .setCancelable(false)
@@ -170,6 +174,8 @@ public class CertificationActivity extends AppCompatActivity {
     }
 
     public void showCertification() {
+
+        // TODO : 시험과목 , 로 되어있는건 분할해야함.
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<List<Recycler_certification>> call = connectDB.certification_data();
 
@@ -185,7 +191,7 @@ public class CertificationActivity extends AppCompatActivity {
                                 if (max <= result.get(i).getNUM())
                                     max = result.get(i).getNUM();
                                 if (title.contains(result.get(i).getNAME()))
-                                    mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_CATEGORY(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
+                                    mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_WRITTEN(), result.get(i).getSUBJECT_PRACTICAL(),  result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
                         }
             }
             @Override
@@ -206,7 +212,8 @@ public class CertificationActivity extends AppCompatActivity {
             TextView company;
             TextView job;
             TextView link;
-            TextView subject_name;
+            TextView subject_written;
+            TextView subject_practical;
             TextView receipt_date;
             TextView written_date;
             TextView practical_date;
@@ -219,7 +226,8 @@ public class CertificationActivity extends AppCompatActivity {
                 company = (TextView) itemView.findViewById(R.id.company);
                 job = (TextView) itemView.findViewById(R.id.job);
                 link = (TextView) itemView.findViewById(R.id.link);
-                subject_name = (TextView) itemView.findViewById(R.id.subject_name);
+                subject_written = (TextView) itemView.findViewById(R.id.subject_written);
+                subject_practical = (TextView) itemView.findViewById(R.id.subject_practical);
                 receipt_date = (TextView) itemView.findViewById(R.id.receipt_date);
                 written_date = (TextView) itemView.findViewById(R.id.written_date);
                 practical_date = (TextView) itemView.findViewById(R.id.practical_date);
@@ -232,7 +240,8 @@ public class CertificationActivity extends AppCompatActivity {
                 company.setText("관련 회사 : " + data.getCOMPANY());
                 job.setText("관련 직종 : " + data.getJOB());
                 link.setText("관련 링크 : " + data.getLINK());
-                subject_name.setText("시험과목이 나와야됭 : " + data.getSUBJECT_CATEGORY());
+                subject_written.setText("필기시험 : " + data.getSUBJECT_WRITTEN());
+                subject_practical.setText("실기시험 : " + data.getSUBJECT_PRACTICAL());
                 receipt_date.setText("접수 날짜 : " + data.getRECEIPT_DATE());
                 written_date.setText("필기 시험 : " + data.getWRITTEN_DATE());
                 practical_date.setText("실기 시험 : " + data.getPRACTICAL_DATE());

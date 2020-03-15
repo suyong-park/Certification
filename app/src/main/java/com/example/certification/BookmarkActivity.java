@@ -216,6 +216,8 @@ public class BookmarkActivity extends AppCompatActivity {
                 Snackbar.make(bookmark_layout, "북마크가 모두 지워졌군요!", Snackbar.LENGTH_SHORT).show();
                 blank.setVisibility(View.VISIBLE);
             }
+            else
+                Snackbar.make(bookmark_layout, "삭제되었습니다.", Snackbar.LENGTH_SHORT).show();
 
             mAdapter.notifyItemRemoved(position);
         }

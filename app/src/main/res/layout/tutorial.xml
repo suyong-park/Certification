@@ -26,25 +26,23 @@
         android:background="@color/fullDark" />
 
     <Button
+        style="?attr/materialButtonOutlinedStyle"
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:background="@null"
-        android:text="@string/next"
-        android:textColor="@color/white" />
+        android:text="@string/next" />
 
     <Button
+        style="?attr/materialButtonOutlinedStyle"
         android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
-        android:background="#00ff0000"
-        android:text="@string/skip"
-        android:textColor="@color/white" />
+        android:text="@string/skip" />
 
 </RelativeLayout>

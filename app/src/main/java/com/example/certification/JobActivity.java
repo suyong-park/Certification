@@ -2,6 +2,7 @@ package com.example.certification;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +41,10 @@ public class JobActivity extends AppCompatActivity {
     Handler handler = new Handler();
     private JobDetailAdapter mAdapter;
     ProgressDialog dialog;
-    String name, num, certification, certification_num;
     Button move;
+
+    String name, certification, certification_num;
+    String title[], number[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,6 @@ public class JobActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
-        num = intent.getStringExtra("num");
 
         setTitle(name);
 
@@ -66,7 +70,7 @@ public class JobActivity extends AppCompatActivity {
 
         if(!isNetworkConnected())
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(JobActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)
@@ -85,11 +89,46 @@ public class JobActivity extends AppCompatActivity {
         move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
-                intent.putExtra("name", certification);
-                intent.putExtra("num", certification_num);
-                intent.putExtra("job", true);
-                startActivity(intent);
+
+                final int[] selectedIndex = {0};
+
+                for(int i = 0; i < title.length; i++)
+                    title[i] = title[i].trim();
+
+                if(title.length == 1) {
+                    Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+                    intent.putExtra("name", title[0]);
+                    intent.putExtra("num", number[0]);
+                    intent.putExtra("job", true);
+                    startActivity(intent);
+                    return ;
+                }
+
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
+                builder.setTitle("어디로 이동할까요?")
+                        .setSingleChoiceItems(title, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                selectedIndex[0] = which;
+                            }
+                        })
+                        .setPositiveButton("이동", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+                                intent.putExtra("name", title[selectedIndex[0]]);
+                                intent.putExtra("num", number[selectedIndex[0]]);
+                                intent.putExtra("job", true);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return ;
+                            }
+                        })
+                        .show();
             }
         });
     }
@@ -105,12 +144,15 @@ public class JobActivity extends AppCompatActivity {
 
                 if(result != null)
                     if (result.size() != 0)
-                        for (int i = 0; i < result.size(); i++)
+                        for (int i = 0; i < result.size(); i++) {
                             if(name.equals(result.get(i).getName())) {
                                 mAdapter.add(new Recycler_job(result.get(i).getName(), result.get(i).getCategory(), result.get(i).getDescription(), result.get(i).getLink(), result.get(i).getNum(), result.get(i).getCertification_name()));
                                 certification = result.get(i).getCertification_name();
                                 certification_num = result.get(i).getNum();
+                                title = certification.split(",");
+                                number = certification_num.split(",");
                             }
+                        }
             }
             @Override
             public void onFailure(Call<List<Recycler_job>> call, Throwable t) {

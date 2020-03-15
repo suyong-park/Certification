@@ -1,7 +1,6 @@
 package com.example.certification;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +20,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class MaincertifiActivity extends AppCompatActivity {
 
         if(!isNetworkConnected())
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MaincertifiActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MaincertifiActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)

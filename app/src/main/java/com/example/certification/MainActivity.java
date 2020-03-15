@@ -1,14 +1,16 @@
 package com.example.certification;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,23 +18,23 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Switch;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NotificationManager manager;
     private static String CHANNEL_ID = "channel1";
     private static String CHANNEL_NAME = "Channel1";
+    private long onBackPressedTime = 0;
 
     TextInputLayout text_layout;
     TextInputEditText editText;
@@ -69,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         boolean isFirst = PreferenceManager.getBoolean(getApplicationContext(), "checkIsFirst");
-        if(isFirst) {
-            PreferenceManager.setBoolean(getApplicationContext(), "checkIsFirst", false);
+        if(!isFirst) {
+            PreferenceManager.setBoolean(getApplicationContext(), "checkIsFirst", true);
 
             Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
             startActivity(intent);
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) { // Keyboard down if user touch the screen.
                     downKeyboard();
                     edit.clearFocus();
                     return true;
@@ -131,6 +134,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEARCH: // Search
                         if(editText.getText().length() < 10) {
+                            if(!isNetworkConnected())
+                            {
+                                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+                                builder.setTitle("메시지")
+                                        .setMessage("네트워크 연결 상태를 확인해 주세요.")
+                                        .setCancelable(false)
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                return ;
+                                            }
+                                        }).show();
+                            }
                             searchResult();
                         }
                         break;
@@ -159,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView version = (TextView) navigation.findViewById(R.id.version);
         version.setText("version : " + getVersionInfo(getApplicationContext()));
 
-        Switch push = (Switch) navigation.findViewById(R.id.switch_push);
+        SwitchMaterial push = (SwitchMaterial) navigation.findViewById(R.id.switch_push);
         boolean state = PreferenceManager.getBoolean(getApplicationContext(),"switch");
         if(state)
             push.setChecked(true);
@@ -168,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         push.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if(isChecked) {
                     PreferenceManager.setBoolean(getApplicationContext(), "switch", isChecked);
                     Snackbar.make(navigationView, "푸시알림 허용하셨습니다.", Snackbar.LENGTH_SHORT).show();
@@ -182,13 +197,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            Log.d("1번", "터치 확인됨");
+    private boolean isNetworkConnected() { // Checking the Network is Connected
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected())
             return true;
-        }
-        return false;
+        else
+            return false;
     }
 
     public void searchResult() {
@@ -212,18 +227,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+
         if(drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
         else {
-            Snackbar.make(drawer, "정말 그만볼꺼에요?", Snackbar.LENGTH_SHORT)
-                    .setAction("넹", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            finish();
-                        }
-                    })
-                    .setDuration(1500)
-                    .show();
+            if(onBackPressedTime + 2000 < System.currentTimeMillis()) {
+                onBackPressedTime = System.currentTimeMillis();
+                Snackbar.make(drawer, "정말 그만 볼 거예요?", Snackbar.LENGTH_SHORT)
+                        .setAction("넹", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finish();
+                            }
+                        })
+                        .show();
+                return ;
+            }
+
+            if(onBackPressedTime + 1500 >= System.currentTimeMillis())
+                finish();
         }
     }
 

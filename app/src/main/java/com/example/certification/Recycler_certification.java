@@ -8,20 +8,22 @@ public class Recycler_certification {
     String JOB;
     String LINK;
     int NUM;
-    String SUBJECT_CATEGORY;
+    String SUBJECT_WRITTEN;
+    String SUBJECT_PRACTICAL;
     String RECEIPT_DATE;
     String WRITTEN_DATE;
     String PRACTICAL_DATE;
     String ANNOUNCEMENT_DATE;
 
-    public Recycler_certification(String NAME, String DESCRIPTION, String COMPANY, String JOB, String LINK, int NUM, String SUBJECT_CATEGORY, String RECEIPT_DATE, String WRITTEN_DATE, String PRACTICAL_DATE, String ANNOUNCEMENT_DATE) {
+    public Recycler_certification(String NAME, String DESCRIPTION, String COMPANY, String JOB, String LINK, int NUM, String SUBJECT_WRITTEN, String SUBJECT_PRACTICAL, String RECEIPT_DATE, String WRITTEN_DATE, String PRACTICAL_DATE, String ANNOUNCEMENT_DATE) {
         this.NAME = NAME;
         this.DESCRIPTION = DESCRIPTION;
         this.COMPANY = COMPANY;
         this.JOB = JOB;
         this.LINK = LINK;
         this.NUM = NUM;
-        this.SUBJECT_CATEGORY = SUBJECT_CATEGORY;
+        this.SUBJECT_WRITTEN = SUBJECT_WRITTEN;
+        this.SUBJECT_PRACTICAL = SUBJECT_PRACTICAL;
         this.RECEIPT_DATE = RECEIPT_DATE;
         this.WRITTEN_DATE = WRITTEN_DATE;
         this.PRACTICAL_DATE = PRACTICAL_DATE;
@@ -52,8 +54,12 @@ public class Recycler_certification {
         return NUM;
     }
 
-    public String getSUBJECT_CATEGORY() {
-        return SUBJECT_CATEGORY;
+    public String getSUBJECT_WRITTEN() {
+        return SUBJECT_WRITTEN;
+    }
+
+    public String getSUBJECT_PRACTICAL() {
+        return SUBJECT_PRACTICAL;
     }
 
     public String getRECEIPT_DATE() {

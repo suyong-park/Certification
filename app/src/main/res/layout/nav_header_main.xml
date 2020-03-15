@@ -33,16 +33,10 @@
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_push"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:thumb="@drawable/switch_thumb"
-        android:track="@drawable/switch_track_selector"
-        android:switchMinWidth="0dp"
-        android:textOff=""
-        android:textOn=""
-        android:thumbTextPadding="15dp"
         android:text="날짜알림이" />
 
 </LinearLayout>

@@ -25,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,7 @@ public class DetailjobActivity extends AppCompatActivity {
 
         if(!isNetworkConnected())
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(DetailjobActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DetailjobActivity.this);
             builder.setTitle("메시지")
                     .setMessage("네트워크 연결 상태를 확인해 주세요.")
                     .setCancelable(false)
@@ -94,7 +96,6 @@ public class DetailjobActivity extends AppCompatActivity {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(DetailjobActivity.this, JobActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
-                    it.putExtra("num", mAdapter.getRecycler_title(currentPos).getNum());
                     startActivity(it);
                     return true;
                 }
