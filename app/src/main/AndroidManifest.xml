@@ -48,8 +48,7 @@
             android:screenOrientation="locked" />
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="locked"
-            android:theme="@style/splash_background">
+            android:screenOrientation="locked" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

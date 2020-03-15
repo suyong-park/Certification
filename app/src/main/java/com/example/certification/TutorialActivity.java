@@ -1,17 +1,14 @@
 package com.example.certification;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +18,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class TutorialActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private LinearLayout container;
-    private TextView[] dots;
+    private TextView present_page;
     private int[] layouts;
     private Button skip, next;
 
@@ -48,7 +43,7 @@ public class TutorialActivity extends AppCompatActivity {
 
         layouts = new int[]{R.layout.tutorial_page_0, R.layout.tutorial_page_1, R.layout.tutorial_page_2, R.layout.tutorial_page_3, R.layout.tutorial_page_4};
 
-        addBottomDots(0);
+        addBottomPageNumber(0);
         changeStatusBarColor();
         pagerAdapter = new PagerAdapter();
         viewPager.setAdapter(pagerAdapter);
@@ -73,16 +68,14 @@ public class TutorialActivity extends AppCompatActivity {
         });
     }
 
-    private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
-
+    private void addBottomPageNumber(int currentPage) { ;
         container.removeAllViews();
-        for(int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(35);
-            container.addView(dots[i]);
-        }
+        present_page = new TextView(this);
+        present_page.setText("" + (currentPage  + 1)+ "/" + "" + layouts.length);
+        present_page.setTextSize(20);
+        present_page.setPadding(0, 25,0, 0);
+        present_page.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/font_bookmark.ttf")); // Add font
+        container.addView(present_page);
     }
 
     private int getItem(int i) {
@@ -106,7 +99,7 @@ public class TutorialActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-            addBottomDots(position);
+            addBottomPageNumber(position);
 
             if(position == layouts.length - 1) {
                 next.setText(getString(R.string.start));

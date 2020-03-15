@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="7dp"
                 android:textSize="24sp"
-                android:fontFamily="@font/font_bookmark" />
+                android:fontFamily="@font/font_temp" />
 
             <TextView
                 android:id="@+id/contents"
@@ -35,7 +35,7 @@
                 android:layout_margin="7dp"
                 android:textSize="18sp"
                 android:text="여기는 카테고리에요."
-                android:fontFamily="@font/font_bookmark" />
+                android:fontFamily="@font/font_temp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

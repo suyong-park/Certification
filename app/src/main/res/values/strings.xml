@@ -6,11 +6,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">@string/app_name</string>
-    <string name="nav_header_subtitle"></string>
+    <string name="nav_header_subtitle">서브타이틀입니다.</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="next">다음</string>
-    <string name="skip">안볼래요!</string>
+    <string name="skip">스킵</string>
     <string name="start">시작</string>
 
     <string name="menu_certification">자격증 화면으로!</string>

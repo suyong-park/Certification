@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -15,8 +16,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -64,9 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        boolean isFirst = PreferenceManager.getBoolean(this, "checkIsFirst");
-        if(!isFirst) {
-            PreferenceManager.setBoolean(this, "checkIsFirst", true);
+        boolean isFirst = PreferenceManager.getBoolean(getApplicationContext(), "checkIsFirst");
+        if(isFirst) {
+            PreferenceManager.setBoolean(getApplicationContext(), "checkIsFirst", false);
 
             Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
             startActivity(intent);
@@ -77,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         // If the keyboard blinding other components, then components are go up the keyboard.
 
+        View view = findViewById(R.id.drawer_layout);
+
         text_layout = findViewById(R.id.text_layout);
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
@@ -84,14 +90,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editText = findViewById(R.id.editText);
 
         setSupportActionBar(toolbar);
-        container.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View v) {
-               downKeyboard();
-           }
-        });
 
-        EditText edit = text_layout.getEditText();
+        final EditText edit = text_layout.getEditText();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    downKeyboard();
+                    edit.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         edit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void afterTextChanged(Editable s) {
 
                 if (s.length() > 10) {
-                    Toast.makeText(getApplicationContext(), "이건 검색 못하지~", Toast.LENGTH_SHORT).show();
                     text_layout.setError("10글자가 넘어부렀네?");
                     return ;
                 }
@@ -132,8 +142,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(View drawerView) { // Open Shortcut menu.
                 super.onDrawerOpened(drawerView);
+                edit.clearFocus();
                 downKeyboard();
             }
         };
@@ -171,6 +182,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            Log.d("1번", "터치 확인됨");
+            return true;
+        }
+        return false;
+    }
+
     public void searchResult() {
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
         Call<String> call = connectDB.search(editText.getText().toString());
@@ -202,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             finish();
                         }
                     })
-                    .setDuration(1700)
+                    .setDuration(1500)
                     .show();
         }
     }

@@ -43,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
-        android:background="@null"
+        android:background="#00ff0000"
         android:text="@string/skip"
         android:textColor="@color/white" />
 

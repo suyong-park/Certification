@@ -3,9 +3,5 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="200"
-        android:font="@font/font_bookmark"/>
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="200"
         android:font="@font/font_temp"/>
 </font-family>
