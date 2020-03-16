@@ -9,18 +9,17 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,14 +38,13 @@ public class CertificationActivity extends AppCompatActivity {
 
     private CertificationDetailAdapter mAdapter;
     ProgressDialog dialog;
-    Handler handler = new Handler();
     LinearLayout certification_layout;
 
     boolean fact, from_bookmark;
     String title, num;
     int max = 1;
 
-    Button bookmark;
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,104 +62,105 @@ public class CertificationActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
-        bookmark = (Button) findViewById(R.id.bookmark);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
+        isNetworkWorking();
 
-        if(from_bookmark)
-            bookmark.setVisibility(View.GONE);
+        certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new CertificationDetailAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        if (!isNetworkConnected()) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
-            return;
-        }
-
         Asynctask asynctask = new Asynctask();
         asynctask.execute();
-
-        bookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String ch_max = String.valueOf(max);
-                String text;
-
-                for(int i = 1; i <= max; i++) {
-                    text = PreferenceManager.getString(getApplicationContext(), num);
-                    if(!text.equals(""))
-                    {
-                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
-                        builder.setTitle("오류")
-                                .setMessage("이미 존재하는 북마크입니다.")
-                                .setCancelable(false)
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        return ;
-                                    }
-                                }).show();
-                        return ;
-                    }
-                }
-
-                PreferenceManager.setString(getApplicationContext(), num, title);
-                PreferenceManager.setString_max(getApplicationContext(), "value", ch_max);
-
-                Snackbar.make(v, "북마크에 추가했어염", Snackbar.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.tab_to_home, menu);
+        getMenuInflater().inflate(R.menu.tab_certification, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        JobActivity job = (JobActivity) JobActivity.JobActivity;
+        MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
+        DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
+        MaincertifiActivity maincertifi = (MaincertifiActivity) MaincertifiActivity.MaincertifiActivity;
+        DetailcertifiActivity detailcertifi = (DetailcertifiActivity) DetailcertifiActivity.DetailcertifiActivity;
+        BookmarkActivity bookmarkActivity = (BookmarkActivity) BookmarkActivity.BookmarkActivity;
+
         switch (item.getItemId()) {
-            case android.R.id.home :
+            case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
-            case R.id.icon_home :
-                if(fact) {
-                    JobActivity job = (JobActivity) JobActivity.JobActivity;
-                    MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
-                    DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
+            case R.id.to_home:
+                if (fact) {
                     finish();
                     job.finish();
                     detailjob.finish();
                     mainjob.finish();
-                }
-                else if(from_bookmark) {
-                    BookmarkActivity bookmarkActivity = (BookmarkActivity) BookmarkActivity.BookmarkActivity;
+                } else if (from_bookmark) {
                     finish();
                     bookmarkActivity.finish();
-                }
-                else if(!fact && !from_bookmark){
-                    MaincertifiActivity maincertifi = (MaincertifiActivity) MaincertifiActivity.MaincertifiActivity;
-                    DetailcertifiActivity detailcertifi = (DetailcertifiActivity) DetailcertifiActivity.DetailcertifiActivity;
+                } else if (!fact && !from_bookmark) {
                     finish();
                     detailcertifi.finish();
                     maincertifi.finish();
                 }
+                break;
+            case R.id.to_bookmark:
+                Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                if (fact) {
+                    startActivity(intent);
+                    finish();
+                    job.finish();
+                    detailjob.finish();
+                    mainjob.finish();
+                } else if (from_bookmark)
+                    finish();
+                else if (!fact && !from_bookmark) {
+                    startActivity(intent);
+                    finish();
+                    detailcertifi.finish();
+                    maincertifi.finish();
+                }
+                break;
+            case R.id.is_bookmark:
+                isTouchBookmark();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void isTouchBookmark() {
+
+        String ch_max = String.valueOf(max);
+        String text;
+
+        for(int i = 1; i <= max; i++) {
+            text = PreferenceManager.getString(getApplicationContext(), num);
+            if(!text.equals("")) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
+                builder.setTitle("오류")
+                        .setMessage("이미 존재하는 북마크입니다.")
+                        .setCancelable(false)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return ;
+                            }
+                        }).show();
+                return ;
+            }
+        }
+
+        PreferenceManager.setString(getApplicationContext(), num, title);
+        PreferenceManager.setString(getApplicationContext(), "max", ch_max);
+
+        Snackbar.make(certification_layout, "북마크에 추가했어염", Snackbar.LENGTH_SHORT).show();
     }
 
     private boolean isNetworkConnected() {
@@ -171,6 +170,30 @@ public class CertificationActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    private void isNetworkWorking() {
+        if (!isNetworkConnected()) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .show();
+            return;
+        }
     }
 
     public void showCertification() {
@@ -235,17 +258,17 @@ public class CertificationActivity extends AppCompatActivity {
             }
 
             public void setData(Recycler_certification data) {
-                name.setText("이름 : " + data.getNAME());
-                description.setText("자격증 내용 : " + data.getDESCRIPTION());
-                company.setText("관련 회사 : " + data.getCOMPANY());
-                job.setText("관련 직종 : " + data.getJOB());
-                link.setText("관련 링크 : " + data.getLINK());
-                subject_written.setText("필기시험 : " + data.getSUBJECT_WRITTEN());
-                subject_practical.setText("실기시험 : " + data.getSUBJECT_PRACTICAL());
-                receipt_date.setText("접수 날짜 : " + data.getRECEIPT_DATE());
-                written_date.setText("필기 시험 : " + data.getWRITTEN_DATE());
-                practical_date.setText("실기 시험 : " + data.getPRACTICAL_DATE());
-                announcement_date.setText("발표 날짜 : " + data.getANNOUNCEMENT_DATE());
+                name.setText(data.getNAME());
+                description.setText(data.getDESCRIPTION());
+                company.setText(data.getCOMPANY());
+                job.setText(data.getJOB());
+                link.setText(data.getLINK());
+                subject_written.setText(data.getSUBJECT_WRITTEN());
+                subject_practical.setText(data.getSUBJECT_PRACTICAL());
+                receipt_date.setText(data.getRECEIPT_DATE());
+                written_date.setText(data.getWRITTEN_DATE());
+                practical_date.setText(data.getPRACTICAL_DATE());
+                announcement_date.setText(data.getANNOUNCEMENT_DATE());
             }
         }
 

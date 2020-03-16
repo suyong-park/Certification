@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -71,20 +72,7 @@ public class DetailjobActivity extends AppCompatActivity {
             }
         });
 
-        if(!isNetworkConnected())
-        {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DetailjobActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
-            return ;
-        }
+        isNetworkWorking();
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -136,6 +124,30 @@ public class DetailjobActivity extends AppCompatActivity {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
             }
         });
+    }
+
+    private void isNetworkWorking() {
+        if (!isNetworkConnected()) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DetailjobActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .show();
+            return;
+        }
     }
 
     private boolean isNetworkConnected() { // Checking the Network is Connected

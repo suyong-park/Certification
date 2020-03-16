@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:fontFamily="@font/font_temp"
-        android:text="북마크가 없네용! 추가해서 확인하세용!"
+        android:fontFamily="@font/font_all"
+        android:text="북마크를 추가해 주세요!"
         android:textAlignment="center"
         android:textSize="20sp" />
 

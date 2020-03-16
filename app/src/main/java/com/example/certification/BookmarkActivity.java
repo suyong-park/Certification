@@ -3,6 +3,7 @@ package com.example.certification;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -135,11 +136,12 @@ public class BookmarkActivity extends AppCompatActivity {
         String text;
 
         try {
-            max = Integer.parseInt(PreferenceManager.getString_max(getApplicationContext(), "value")); // max value
+            max = Integer.parseInt(PreferenceManager.getString(getApplicationContext(), "max")); // max value
 
             for(int i = 1; i <= max; i++) {
                 String temp = String.valueOf(i);
                 text = PreferenceManager.getString(getApplicationContext(), temp);
+
                 if(!text.equals("")) {
                     mAdapter.add(new Recycler_bookmark(text));
                     num = temp;
@@ -201,7 +203,7 @@ public class BookmarkActivity extends AppCompatActivity {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             final int position = viewHolder.getAdapterPosition();
-            int max = Integer.parseInt(PreferenceManager.getString_max(getApplicationContext(), "value")); // max value
+            int max = Integer.parseInt(PreferenceManager.getString(getApplicationContext(), "value")); // max value
 
             for (int i = 1; i <= max; i++) {
                 String temp_num = String.valueOf(i);

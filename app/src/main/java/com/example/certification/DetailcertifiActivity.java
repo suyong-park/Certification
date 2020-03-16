@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -61,6 +62,8 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        isNetworkWorking();
+
         bookmark = (Button) findViewById(R.id.bookmark);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
@@ -74,21 +77,6 @@ public class DetailcertifiActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        if(!isNetworkConnected())
-        {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DetailcertifiActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
-            return ;
-        }
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -129,6 +117,30 @@ public class DetailcertifiActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    private void isNetworkWorking() {
+        if (!isNetworkConnected()) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DetailcertifiActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .show();
+            return;
+        }
     }
 
     @Override

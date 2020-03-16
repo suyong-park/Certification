@@ -6,8 +6,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">@string/app_name</string>
-    <string name="nav_header_subtitle">서브타이틀입니다.</string>
-    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="add_bookmark">북마크 등록하기!</string>
+    <string name="move_certification">자격증 정보찾기!</string>
+    <string name="move_bookmark">북마크 바로가기!</string>
+    <string name="move_home">홈화면 바로가기!</string>
 
     <string name="next">다음</string>
     <string name="skip">스킵</string>

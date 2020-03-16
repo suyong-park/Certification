@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="7dp"
                 android:textSize="24sp"
-                android:fontFamily="@font/font_temp" />
+                android:fontFamily="@font/font_all" />
 
             <TextView
                 android:id="@+id/contents"
@@ -37,7 +37,7 @@
                 android:layout_margin="7dp"
                 android:textSize="18sp"
                 android:text="안녕하세요"
-                android:fontFamily="@font/font_temp" />
+                android:fontFamily="@font/font_all" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

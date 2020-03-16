@@ -18,8 +18,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.button.MaterialButton;
-
 public class TutorialActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
@@ -76,7 +74,7 @@ public class TutorialActivity extends AppCompatActivity {
         present_page.setText("" + (currentPage  + 1)+ "/" + "" + layouts.length);
         present_page.setTextSize(20);
         present_page.setPadding(0, 25,0, 0);
-        present_page.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/font_bookmark.ttf")); // Add font
+        present_page.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/font_view_page.ttf")); // Add font
         container.addView(present_page);
     }
 

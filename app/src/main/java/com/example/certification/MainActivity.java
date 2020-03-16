@@ -1,5 +1,6 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,7 +29,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -134,19 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEARCH: // Search
                         if(editText.getText().length() < 10) {
-                            if(!isNetworkConnected())
-                            {
-                                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-                                builder.setTitle("메시지")
-                                        .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                                        .setCancelable(false)
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                return ;
-                                            }
-                                        }).show();
-                            }
+                            isNetworkWorking();
                             searchResult();
                         }
                         break;
@@ -204,6 +195,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         else
             return false;
+    }
+
+    private void isNetworkWorking() {
+        if (!isNetworkConnected()) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("나가기", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNeutralButton("취소", null)
+                    .show();
+            return;
+        }
     }
 
     public void searchResult() {

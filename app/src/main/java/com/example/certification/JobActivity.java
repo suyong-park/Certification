@@ -2,7 +2,6 @@ package com.example.certification;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,7 +40,6 @@ public class JobActivity extends AppCompatActivity {
     Handler handler = new Handler();
     private JobDetailAdapter mAdapter;
     ProgressDialog dialog;
-    Button move;
 
     String name, certification, certification_num;
     String title[], number[];
@@ -60,77 +58,16 @@ public class JobActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        move = (Button) findViewById(R.id.move);
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.job_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new JobDetailAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        if(!isNetworkConnected())
-        {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
-            return ;
-        }
+        isNetworkWorking();
 
         Asynctask asyncTask = new Asynctask();
         asyncTask.execute();
-
-        move.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final int[] selectedIndex = {0};
-
-                for(int i = 0; i < title.length; i++)
-                    title[i] = title[i].trim();
-
-                if(title.length == 1) {
-                    Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
-                    intent.putExtra("name", title[0]);
-                    intent.putExtra("num", number[0]);
-                    intent.putExtra("job", true);
-                    startActivity(intent);
-                    return ;
-                }
-
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
-                builder.setTitle("어디로 이동할까요?")
-                        .setSingleChoiceItems(title, -1, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                selectedIndex[0] = which;
-                            }
-                        })
-                        .setPositiveButton("이동", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
-                                intent.putExtra("name", title[selectedIndex[0]]);
-                                intent.putExtra("num", number[selectedIndex[0]]);
-                                intent.putExtra("job", true);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return ;
-                            }
-                        })
-                        .show();
-            }
-        });
     }
 
     public void ConnectDB() {
@@ -170,26 +107,103 @@ public class JobActivity extends AppCompatActivity {
             return false;
     }
 
+    private void isNetworkWorking() {
+        if (!isNetworkConnected()) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
+            builder.setTitle("메시지")
+                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
+                    .setCancelable(false)
+                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .show();
+            return;
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.tab_to_home, menu);
+        getMenuInflater().inflate(R.menu.tab_job, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
+        DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
-            case R.id.icon_home :
-                MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
-                DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
+            case R.id.to_home :
                 finish();
                 detailjob.finish();
                 mainjob.finish();
+                break;
+            case R.id.to_bookmark :
+                Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                startActivity(intent);
+                finish();
+                detailjob.finish();
+                mainjob.finish();
+                break;
+            case R.id.to_certification :
+                isTouchCertification();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void isTouchCertification() {
+        final int[] selectedIndex = {0};
+
+        for(int i = 0; i < title.length; i++)
+            title[i] = title[i].trim();
+
+        if(title.length == 1) {
+            Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+            intent.putExtra("name", title[0]);
+            intent.putExtra("num", number[0]);
+            intent.putExtra("job", true);
+            startActivity(intent);
+            return ;
+        }
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
+        builder.setTitle("어디로 이동할까요?")
+                .setSingleChoiceItems(title, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectedIndex[0] = which;
+                    }
+                })
+                .setPositiveButton("이동", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+                        intent.putExtra("name", title[selectedIndex[0]]);
+                        intent.putExtra("num", number[selectedIndex[0]]);
+                        intent.putExtra("job", true);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return ;
+                    }
+                })
+                .show();
     }
 
     class JobDetailAdapter extends RecyclerView.Adapter<JobActivity.JobDetailAdapter.ViewHolder> {
@@ -212,10 +226,10 @@ public class JobActivity extends AppCompatActivity {
             }
 
             public void setData(Recycler_job data) {
-                job_name.setText("직업 이름 : " + data.getName());
-                description.setText("직업 설명 : " + data.getDescription());
-                link.setText("관련 링크 : " + data.getLink());
-                name.setText("관련 자격증 : " + data.getCertification_name());
+                job_name.setText(data.getName());
+                description.setText(data.getDescription());
+                link.setText(data.getLink());
+                name.setText(data.getCertification_name());
             }
         }
 
