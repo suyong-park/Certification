@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,6 +126,12 @@ public class BookmarkActivity extends AppCompatActivity {
                     mAdapter.add(new Recycler_bookmark(array[i]));
                 mAdapter.notifyDataSetChanged();
                 return true;
+            case R.id.new_sort :
+                Toast.makeText(getApplicationContext(), "최신저장순", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.old_sort :
+                Toast.makeText(getApplicationContext(), "과거순", Toast.LENGTH_SHORT).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -132,23 +139,17 @@ public class BookmarkActivity extends AppCompatActivity {
 
     public void addBookmark() {
 
-        int max;
+        int last_num;
         String text;
 
-        try {
-            max = Integer.parseInt(PreferenceManager.getString(getApplicationContext(), "max")); // max value
-
-            for(int i = 1; i <= max; i++) {
-                String temp = String.valueOf(i);
-                text = PreferenceManager.getString(getApplicationContext(), temp);
-
-                if(!text.equals("")) {
-                    mAdapter.add(new Recycler_bookmark(text));
-                    num = temp;
-                }
-            }
-        }
-        catch (NumberFormatException e) {
+        last_num = PreferenceManager.getInt(getApplicationContext(), "");
+        for(int i = 0; i <= last_num; i++) {
+            String temp = String.valueOf(i);
+            text = PreferenceManager.getString(getApplicationContext(), temp);
+            if(text.equals(null) || text.equals(""))
+                continue;
+            mAdapter.add(new Recycler_bookmark(text));
+            num = temp;
         }
     }
 
@@ -203,18 +204,22 @@ public class BookmarkActivity extends AppCompatActivity {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             final int position = viewHolder.getAdapterPosition();
-            int max = Integer.parseInt(PreferenceManager.getString(getApplicationContext(), "value")); // max value
+            int last_num;
+            String text;
 
-            for (int i = 1; i <= max; i++) {
-                String temp_num = String.valueOf(i);
-                String tmp = PreferenceManager.getString(getApplicationContext(), temp_num);
-                if (tmp.equals(mlist.get(position).getTitle())) {
+            last_num = PreferenceManager.getInt(getApplicationContext(), "");
+            for(int i = 0; i <= last_num; i++) {
+                String temp = String.valueOf(i);
+                text = PreferenceManager.getString(getApplicationContext(), temp);
+                if (text.equals(mlist.get(position).getTitle())) {
                     mlist.remove(position);
-                    PreferenceManager.removeKey(getApplicationContext(), temp_num);
+                    PreferenceManager.removeKey(getApplicationContext(), temp);
+                    PreferenceManager.setInt(getApplicationContext(), "", last_num);
                     break;
                 }
             }
             if(mAdapter.getItemCount() == 0) {
+                PreferenceManager.removeKey(getApplicationContext(), "");
                 Snackbar.make(bookmark_layout, "북마크가 모두 지워졌군요!", Snackbar.LENGTH_SHORT).show();
                 blank.setVisibility(View.VISIBLE);
             }

@@ -40,7 +40,7 @@ public class CertificationActivity extends AppCompatActivity {
     ProgressDialog dialog;
     LinearLayout certification_layout;
 
-    boolean fact, from_bookmark;
+    boolean from_job, from_bookmark;
     String title, num;
     int max = 1;
 
@@ -55,7 +55,7 @@ public class CertificationActivity extends AppCompatActivity {
 
         title = intent.getStringExtra("name");  // name of certification
         num = intent.getStringExtra("num");
-        fact = intent.getBooleanExtra("job", false);
+        from_job = intent.getBooleanExtra("job", false);
         from_bookmark = intent.getBooleanExtra("bookmark", false);
 
         setTitle(title);
@@ -85,48 +85,34 @@ public class CertificationActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        Intent intent;
+
         JobActivity job = (JobActivity) JobActivity.JobActivity;
         MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
         DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
-        MaincertifiActivity maincertifi = (MaincertifiActivity) MaincertifiActivity.MaincertifiActivity;
-        DetailcertifiActivity detailcertifi = (DetailcertifiActivity) DetailcertifiActivity.DetailcertifiActivity;
-        BookmarkActivity bookmarkActivity = (BookmarkActivity) BookmarkActivity.BookmarkActivity;
 
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
             case R.id.to_home:
-                if (fact) {
-                    finish();
-                    job.finish();
-                    detailjob.finish();
-                    mainjob.finish();
-                } else if (from_bookmark) {
-                    finish();
-                    bookmarkActivity.finish();
-                } else if (!fact && !from_bookmark) {
-                    finish();
-                    detailcertifi.finish();
-                    maincertifi.finish();
-                }
+                intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
             case R.id.to_bookmark:
-                Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
-                if (fact) {
+                intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                if (from_job) { // Move in original order from job activity.
                     startActivity(intent);
                     finish();
                     job.finish();
                     detailjob.finish();
                     mainjob.finish();
-                } else if (from_bookmark)
-                    finish();
-                else if (!fact && !from_bookmark) {
-                    startActivity(intent);
-                    finish();
-                    detailcertifi.finish();
-                    maincertifi.finish();
                 }
+                else if (from_bookmark)
+                    finish();
+                else if (!from_job && !from_bookmark)  // Move in original order from main activity.
+                    startActivity(intent);
                 break;
             case R.id.is_bookmark:
                 isTouchBookmark();
@@ -137,30 +123,47 @@ public class CertificationActivity extends AppCompatActivity {
 
     public void isTouchBookmark() {
 
-        String ch_max = String.valueOf(max);
         String text;
 
-        for(int i = 1; i <= max; i++) {
-            text = PreferenceManager.getString(getApplicationContext(), num);
-            if(!text.equals("")) {
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
-                builder.setTitle("오류")
-                        .setMessage("이미 존재하는 북마크입니다.")
-                        .setCancelable(false)
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return ;
-                            }
-                        }).show();
-                return ;
+        boolean flag_1, flag_2 = false;
+        int count = 0, i;
+        String[] temp_array = new String[max];
+
+        while(count < temp_array.length) {
+            for(int j = 0; j < temp_array.length; j++) {
+                text = PreferenceManager.getString(getApplicationContext(), Integer.toString(j));
+
+                if (text.equals(title)) {
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
+                    builder.setTitle("오류")
+                            .setMessage("이미 존재하는 북마크입니다.")
+                            .setCancelable(false)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            }).show();
+                    flag_2 = true;
+                    break;
+                }
             }
+
+            if(flag_2)
+                break;
+
+            while(true) {
+                i = PreferenceManager.getInt(getApplicationContext(), "") + 1;
+                PreferenceManager.setString(getApplicationContext(), Integer.toString(i), title);
+                PreferenceManager.setInt(getApplicationContext(), "", i);
+                flag_1 = true;
+                count++;
+                Snackbar.make(certification_layout, "북마크에 추가했어염", Snackbar.LENGTH_SHORT).show();
+                break;
+            }
+            if(flag_1)
+                break;
         }
-
-        PreferenceManager.setString(getApplicationContext(), num, title);
-        PreferenceManager.setString(getApplicationContext(), "max", ch_max);
-
-        Snackbar.make(certification_layout, "북마크에 추가했어염", Snackbar.LENGTH_SHORT).show();
     }
 
     private boolean isNetworkConnected() {

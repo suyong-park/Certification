@@ -10,10 +10,17 @@
         />
 
     <item
-        android:id="@+id/save_sort"
+        android:id="@+id/new_sort"
         app:showAsAction="never"
         android:enabled="true"
-        android:title="저장순"
+        android:title="최신순"
+        />
+
+    <item
+        android:id="@+id/old_sort"
+        app:showAsAction="never"
+        android:enabled="true"
+        android:title="과거순"
         />
 
 </menu>

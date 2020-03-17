@@ -139,13 +139,13 @@ public class JobActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
-        DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
             case R.id.to_home :
+                MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
+                DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
                 finish();
                 detailjob.finish();
                 mainjob.finish();
@@ -153,9 +153,6 @@ public class JobActivity extends AppCompatActivity {
             case R.id.to_bookmark :
                 Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
                 startActivity(intent);
-                finish();
-                detailjob.finish();
-                mainjob.finish();
                 break;
             case R.id.to_certification :
                 isTouchCertification();

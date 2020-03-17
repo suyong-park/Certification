@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edge_search"
-                    android:hint="검색하세염!"
+                    android:hint="검색"
                     android:imeOptions="actionSearch"
                     android:lines="1"
                     android:singleLine="true" />

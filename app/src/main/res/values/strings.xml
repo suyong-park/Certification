@@ -7,22 +7,22 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">@string/app_name</string>
 
-    <string name="add_bookmark">북마크 등록하기!</string>
-    <string name="move_certification">자격증 정보찾기!</string>
-    <string name="move_bookmark">북마크 바로가기!</string>
-    <string name="move_home">홈화면 바로가기!</string>
+    <string name="add_bookmark">북마크 등록</string>
+    <string name="move_certification">자격증 확인</string>
+    <string name="move_bookmark">북마크 이동</string>
+    <string name="move_home">홈화면 이동</string>
 
     <string name="next">다음</string>
     <string name="skip">스킵</string>
     <string name="start">시작</string>
 
-    <string name="menu_certification">자격증 화면으로!</string>
-    <string name="menu_job">진출직종 화면으로!</string>
-    <string name="menu_bookmark">북마크 화면으로!</string>
-    <string name="menu_home">달력으로 일정확인!</string>
-    <string name="menu_website">웹사이트로 보기!</string>
-    <string name="menu_share">친구들에게 공유하기!</string>
-    <string name="menu_send">개발자에게 조언하기!</string>
+    <string name="menu_certification">자격증</string>
+    <string name="menu_job">진출직업</string>
+    <string name="menu_bookmark">북마크</string>
+    <string name="menu_home">캘린더</string>
+    <string name="menu_website">웹사이트</string>
+    <string name="menu_share">친구들에게 공유</string>
+    <string name="menu_send">개발자에게 조언</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
