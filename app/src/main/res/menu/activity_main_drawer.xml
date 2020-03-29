@@ -25,6 +25,10 @@
     <item android:title="Communicate">
         <menu>
             <item
+                android:id="@+id/push"
+                android:icon="@drawable/icon_push"
+                android:title="@string/menu_push" />
+            <item
                 android:id="@+id/web"
                 android:icon="@drawable/icon_website"
                 android:title="@string/menu_website" />

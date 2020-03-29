@@ -6,15 +6,13 @@ public class Recycler_job {
     String CATEGORY;
     String DESCRIPTION;
     String LINK;
-    String NUM;
     String CERTIFICATION_NAME;
 
-    public Recycler_job(String NAME, String CATEGORY, String DESCRIPTION, String LINK, String NUM, String CERTIFICATION_NAME) {
+    public Recycler_job(String NAME, String CATEGORY, String DESCRIPTION, String LINK, String CERTIFICATION_NAME) {
         this.NAME = NAME;
         this.CATEGORY = CATEGORY;
         this.DESCRIPTION = DESCRIPTION;
         this.LINK = LINK;
-        this.NUM = NUM;
         this.CERTIFICATION_NAME = CERTIFICATION_NAME;
     }
 
@@ -36,9 +34,5 @@ public class Recycler_job {
 
     public String getLink() {
         return LINK;
-    }
-
-    public String getNum() {
-        return NUM;
     }
 }

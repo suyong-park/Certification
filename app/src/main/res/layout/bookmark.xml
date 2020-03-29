@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:fontFamily="@font/font_all"
-        android:text="북마크를 추가해 주세요!"
+        android:text="북마크를 추가해 주세요."
         android:textAlignment="center"
         android:textSize="20sp" />
 
@@ -25,10 +25,10 @@
         android:fadeScrollbars="false" >
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/title_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:id="@+id/title_recycler_view">
+            android:overScrollMode="never" >
         </androidx.recyclerview.widget.RecyclerView>
 
     </ScrollView>

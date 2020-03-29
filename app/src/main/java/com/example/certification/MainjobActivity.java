@@ -1,14 +1,8 @@
 package com.example.certification;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-
-import android.provider.Settings;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -16,16 +10,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +53,7 @@ public class MainjobActivity extends AppCompatActivity {
             }
         });
 
-        isNetworkWorking();
+        Broadcast.isNetworkWorking(MainjobActivity.this);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -93,39 +83,6 @@ public class MainjobActivity extends AppCompatActivity {
         ConnectDB();
     }
 
-    private boolean isNetworkConnected() { // Checking the Network is Connected
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
-    private void isNetworkWorking() {
-        if (!isNetworkConnected()) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainjobActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .show();
-            return;
-        }
-    }
-
     public void ConnectDB() {
 
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
@@ -140,7 +97,7 @@ public class MainjobActivity extends AppCompatActivity {
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++) {
                             if(!temp.equals(result.get(i).getCategory()))
-                                mAdapter.add(new Recycler_category(result.get(i).getTitle(), result.get(i).getCategory(), result.get(i).getNum()));
+                                mAdapter.add(new Recycler_category(result.get(i).getTitle(), result.get(i).getCategory()));
                             temp = result.get(i).getCategory();
                         }
             }
@@ -148,6 +105,10 @@ public class MainjobActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Recycler_category>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
+                Broadcast.AlertBuild(MainjobActivity, "에러", "서버 연결에 실패했습니다.")
+                        .setPositiveButton("확인", null)
+                        .setNegativeButton("취소", null)
+                        .show();
             }
         });
     }

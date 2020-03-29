@@ -1,55 +1,42 @@
 package com.example.certification;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.NotificationCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,25 +45,28 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 // TODO : 앱 버전 플레이스토어에서 확인한 후 구 버전인 경우 업데이트 하도록 권고.
 
-    NotificationManager manager;
-    private static String CHANNEL_ID = "channel1";
-    private static String CHANNEL_NAME = "Channel1";
     private long onBackPressedTime = 0;
+    private boolean isFabOpen = false;
+    private Animation fab_open, fab_close;
+    private FloatingActionButton[] fab = new FloatingActionButton[5];
 
+    MainActivity mainActivity;
     TextInputLayout text_layout;
     TextInputEditText editText;
     DrawerLayout drawer;
-    ConstraintLayout container;
     Toolbar toolbar;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        boolean isFirst = PreferenceManager.getBoolean(getApplicationContext(), "checkIsFirst");
+        mainActivity = MainActivity.this;
+
+        boolean isFirst = PreferenceManager.getBoolean(mainActivity, "checkIsFirst");
         if(!isFirst) {
-            PreferenceManager.setBoolean(getApplicationContext(), "checkIsFirst", true);
+            PreferenceManager.setBoolean(mainActivity, "checkIsFirst", true);
 
             Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
             startActivity(intent);
@@ -87,13 +77,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         // If the keyboard blinding other components, then components are go up the keyboard.
 
+        Broadcast.HashMap();
         View view = findViewById(R.id.drawer_layout);
 
         text_layout = findViewById(R.id.text_layout);
-        toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
-        container = findViewById(R.id.container);
         editText = findViewById(R.id.editText);
+        toolbar = findViewById(R.id.toolbar);
+
+        for(int i = 0; i < 5; i++) {
+            switch (i) {
+                case 0:
+                    fab[0] = findViewById(R.id.fab_main);
+                case 1:
+                    fab[1] = findViewById(R.id.fab_calendar);
+                case 2:
+                    fab[2] = findViewById(R.id.fab_bookmark);
+                case 3:
+                    fab[3] = findViewById(R.id.fab_company);
+                case 4:
+                    fab[4] = findViewById(R.id.fab_certification);
+            }
+        }
+
+        fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(this, R.anim.fab_close);
+
+        for(int i = 0; i < 5; i++) {
+            final int count = i;
+            fab[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isOpenFab();
+                    Intent intent;
+                    switch (count) {
+                        case 1:
+                            intent = new Intent(mainActivity, CalendarActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 2:
+                            intent = new Intent(mainActivity, BookmarkActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 3:
+                            intent = new Intent(mainActivity, MainjobActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 4:
+                            intent = new Intent(mainActivity, MaincertifiActivity.class);
+                            startActivity(intent);
+                            break;
+                    }
+                }
+            });
+        }
+
+        String[] title = {"검색항목 선택", "자격증", "직업"};
+        spinner = findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        adapter.addAll(title);
+        spinner.setAdapter(adapter);
 
         setSupportActionBar(toolbar);
 
@@ -102,6 +145,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN) { // Keyboard down if user touch the screen.
+                    if(isFabOpen) {
+                        fab[0].setImageResource(R.drawable.icon_unfold_more);
+                        for (int i = 1; i < 5; i++) {
+                            fab[i].startAnimation(fab_close);
+                            fab[i].setClickable(false);
+                        }
+                        isFabOpen = false;
+                    }
                     downKeyboard();
                     edit.clearFocus();
                     return true;
@@ -122,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (s.length() > 10) {
-                    text_layout.setError("10글자가 넘어부렀네?");
+                if (!s.toString().matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*")) {
+                    text_layout.setError("특수문자는 검색할 수 없습니다.");
                     return ;
                 }
                 else
@@ -136,8 +187,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEARCH: // Search
+                        downKeyboard();
+                        if(spinner.getSelectedItem().toString().equals("검색항목 선택")) {
+                            Snackbar.make(drawer, "검색 항목을 선택하세요.", Snackbar.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        if(editText.getText().length() == 0) {
+                            Snackbar.make(drawer, "검색 내용을 입력하세요.", Snackbar.LENGTH_SHORT).show();
+                            return false;
+                        }
                         if(editText.getText().length() < 10) {
-                            isNetworkWorking();
+                            Broadcast.isNetworkWorking(MainActivity.this);
                             searchResult();
                         }
                         break;
@@ -152,7 +212,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDrawerOpened(View drawerView) { // Open Shortcut menu.
                 super.onDrawerOpened(drawerView);
                 edit.clearFocus();
-                downKeyboard();
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         };
 
@@ -164,79 +225,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final View navigation = navigationView.getHeaderView(0);
         TextView version = (TextView) navigation.findViewById(R.id.version);
-        version.setText("version : " + getVersionInfo(getApplicationContext()));
+        version.setText("version : " + getVersionInfo(mainActivity));
+    }
 
-        SwitchMaterial push = (SwitchMaterial) navigation.findViewById(R.id.switch_push);
-        boolean state = PreferenceManager.getBoolean(getApplicationContext(),"switch");
-        if(state)
-            push.setChecked(true);
-        else if(!state)
-            push.setChecked(false);
-        push.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    PreferenceManager.setBoolean(getApplicationContext(), "switch", isChecked);
-                    Snackbar.make(navigationView, "푸시알림 허용하셨습니다.", Snackbar.LENGTH_SHORT).show();
-                    showNotice();
-                }
-                else {
-                    PreferenceManager.setBoolean(getApplicationContext(), "switch", isChecked);
-                    Snackbar.make(navigationView, "푸시알림 거부하셨습니다.", Snackbar.LENGTH_SHORT).show();
-                }
+    public void isOpenFab() {
+        if(isFabOpen) {
+            fab[0].setImageResource(R.drawable.icon_unfold_more);
+            for(int i = 1; i < 5; i++) {
+                fab[i].startAnimation(fab_close);
+                fab[i].setClickable(false);
             }
-        });
-    }
-
-    private boolean isNetworkConnected() { // Checking the Network is Connected
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
-    private void isNetworkWorking() {
-        if (!isNetworkConnected()) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("나가기", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .setNeutralButton("취소", null)
-                    .show();
-            return;
+            isFabOpen = false;
+        }
+        else {
+            fab[0].setImageResource(R.drawable.icon_unfold_less);
+            for(int i = 1; i < 5; i++) {
+                fab[i].startAnimation(fab_open);
+                fab[i].setClickable(true);
+            }
+            isFabOpen = true;
         }
     }
 
     public void searchResult() {
-        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
-        Call<String> call = connectDB.search(editText.getText().toString());
 
-        call.enqueue(new Callback<String>() {
+        final String search_word = editText.getText().toString().trim(); // To searching word
+        final String search_category = spinner.getSelectedItem().toString(); // Category of Search_word
+
+        ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
+        Call<List<Recycler_onething>> call = connectDB.search(Broadcast.Filtering(search_category, search_word));
+
+        call.enqueue(new Callback<List<Recycler_onething>>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String result = response.body();
+            public void onResponse(Call<List<Recycler_onething>> call, Response<List<Recycler_onething>> response) {
+                List<Recycler_onething> result = response.body();
+                String[] title_name = new String[result.size()];
+
                 if(result != null) {
-                    Toast.makeText(getApplicationContext(), "통신 결과 : " + result, Toast.LENGTH_SHORT).show();
+                    if (result.size() != 0) {
+                        for (int i = 0; i < result.size(); i++)
+                            title_name[i] = result.get(i).getTitle();
+                        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                        intent.putExtra("title_name", title_name);
+                        intent.putExtra("category", search_category);
+                        intent.putExtra("search_word", search_word);
+                        startActivity(intent);
+                    }
+                    else {
+                        Broadcast.AlertBuild(MainActivity.this, "메시지", search_word + " 와(과) 관련된 검색 결과가 없습니다.")
+                        .setPositiveButton("확인", null)
+                        .show();
+                        return ;
+                    }
                 }
             }
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<List<Recycler_onething>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
+                Broadcast.AlertBuild(mainActivity, "에러", "서버 연결에 실패했습니다.")
+                        .setPositiveButton("확인", null)
+                        .setNegativeButton("취소", null)
+                        .show();
             }
         });
     }
@@ -249,8 +298,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             if(onBackPressedTime + 2000 < System.currentTimeMillis()) {
                 onBackPressedTime = System.currentTimeMillis();
-                Snackbar.make(drawer, "정말 그만 볼 거예요?", Snackbar.LENGTH_SHORT)
-                        .setAction("넹", new View.OnClickListener() {
+                Snackbar.make(drawer, "정말 나가시겠습니까?", Snackbar.LENGTH_SHORT)
+                        .setAction("네", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 finish();
@@ -259,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .show();
                 return ;
             }
-
             if(onBackPressedTime + 1500 >= System.currentTimeMillis())
                 finish();
         }
@@ -268,79 +316,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        int id = item.getItemId();
-        if(id == R.id.certification) {
-            Intent intent = new Intent(getApplicationContext(), MaincertifiActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.job) {
-            Intent intent = new Intent(getApplicationContext(), MainjobActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.bookmark) {
-            Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.calendar_pop) {
-            Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.web) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
-            startActivity(intent);
-        }
-        else if(id == R.id.share) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "안녕 !! 이건 공유하기");
-            intent.putExtra(Intent.EXTRA_TEXT, "이런 앱이 있당!!");
-            Intent chooser = Intent.createChooser(intent, "공유");
-            startActivity(chooser);
-        }
-        else if(id == R.id.send) {
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.setType("plain/Text");
-            String[] address = {"spdlqjfire@gmail.com"};
-            email.putExtra(Intent.EXTRA_EMAIL, address);
-            email.putExtra(Intent.EXTRA_SUBJECT,"<자격증>개발자에게 보내는 조언 및 건의");
-            email.putExtra(Intent.EXTRA_TEXT,"**불편사항 혹은 건의사항의 경우 앱 버전과 안드로이드 기기 종류를 함께 보내주시면 감사하겠습니다.\n앱 버전: \n기기명: ");
-            startActivity(email);
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.certification :
+                intent = new Intent(mainActivity, MaincertifiActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.job :
+                intent = new Intent(mainActivity, MainjobActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.bookmark :
+                intent = new Intent(mainActivity, BookmarkActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.calendar_pop :
+                intent = new Intent(mainActivity, CalendarActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.push :
+                intent = new Intent(mainActivity, PushActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.web :
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
+                startActivity(intent);
+                return true;
+            case R.id.share :
+                intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "안녕 !! 이건 공유하기");
+                intent.putExtra(Intent.EXTRA_TEXT, "이런 앱이 있당!!");
+                Intent chooser = Intent.createChooser(intent, "공유");
+                startActivity(chooser);
+                return true;
+            case R.id.send :
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/Text");
+                String[] address = {"spdlqjfire@gmail.com"};
+                intent.putExtra(Intent.EXTRA_EMAIL, address);
+                intent.putExtra(Intent.EXTRA_SUBJECT,"<자격증>개발자에게 보내는 조언 및 건의");
+                intent.putExtra(Intent.EXTRA_TEXT,"**불편사항 혹은 건의사항의 경우 앱 버전과 안드로이드 기기 종류를 함께 보내주시면 감사하겠습니다.\n앱 버전: \n기기명: ");
+                startActivity(intent);
+                return true;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void showNotice() {
-        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        NotificationCompat.Builder builder = null;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (manager.getNotificationChannel(CHANNEL_ID) == null)
-                manager.createNotificationChannel(new NotificationChannel(
-                        CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
-                ));
-            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        }
-        else
-            builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentTitle("자격증어플 입니다.")
-                .setContentText("푸시알림에 동의하셨습니다.")
-                .setSmallIcon(android.R.drawable.ic_menu_view)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        Notification noti = builder.build();
-        manager.notify(2, noti);
-    }
-
     public void downKeyboard() {
-        View view = this.getCurrentFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        InputMethodManager inputManager = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focusedView = mainActivity.getCurrentFocus();
+
+        if (focusedView != null)
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public String getVersionInfo(Context context) {
@@ -348,9 +379,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String version = "Unknown";
         PackageInfo packageInfo;
 
-        if (context == null) {
+        if (context == null)
             return version;
-        }
+
         try {
             packageInfo = context.getApplicationContext()
                     .getPackageManager()

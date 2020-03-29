@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">자격증따자!</string>
+    <string name="app_name">성공의 자격 : 컴공</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_main">@string/app_name</string>
@@ -20,8 +20,9 @@
     <string name="menu_job">진출직업</string>
     <string name="menu_bookmark">북마크</string>
     <string name="menu_home">캘린더</string>
+    <string name="menu_push">알림설정</string>
     <string name="menu_website">웹사이트</string>
-    <string name="menu_share">친구들에게 공유</string>
+    <string name="menu_share">앱 공유</string>
     <string name="menu_send">개발자에게 조언</string>
 
     <!-- TODO: Remove or change this placeholder text -->

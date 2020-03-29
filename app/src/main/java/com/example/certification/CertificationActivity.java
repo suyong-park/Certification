@@ -1,15 +1,12 @@
 package com.example.certification;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -36,12 +32,13 @@ import retrofit2.Response;
 
 public class CertificationActivity extends AppCompatActivity {
 
+    public static Activity certificationactivity;
     private CertificationDetailAdapter mAdapter;
     ProgressDialog dialog;
     LinearLayout certification_layout;
 
-    boolean from_job, from_bookmark;
-    String title, num;
+    boolean from_job, from_bookmark, from_search;
+    String title;
     int max = 1;
 
     Handler handler = new Handler();
@@ -51,18 +48,20 @@ public class CertificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.certification);
 
+        certificationactivity = CertificationActivity.this;
+
         Intent intent = getIntent();
 
         title = intent.getStringExtra("name");  // name of certification
-        num = intent.getStringExtra("num");
         from_job = intent.getBooleanExtra("job", false);
         from_bookmark = intent.getBooleanExtra("bookmark", false);
+        from_search = intent.getBooleanExtra("search", false);
 
         setTitle(title);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        isNetworkWorking();
+        Broadcast.isNetworkWorking(CertificationActivity.this);
 
         certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
@@ -86,11 +85,6 @@ public class CertificationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Intent intent;
-
-        JobActivity job = (JobActivity) JobActivity.JobActivity;
-        MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
-        DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish(); // If touch the back key on tool bar, then finish present activity.
@@ -101,10 +95,21 @@ public class CertificationActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.to_bookmark:
-                intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                intent = new Intent(certificationactivity, BookmarkActivity.class);
                 if (from_job) { // Move in original order from job activity.
+                    if(from_search) {
+                        finish();
+                        startActivity(intent);
+                        break;
+                    }
+
+                    JobActivity job = (JobActivity) JobActivity.JobActivity;
+                    MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
+                    DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
+
                     startActivity(intent);
                     finish();
+
                     job.finish();
                     detailjob.finish();
                     mainjob.finish();
@@ -124,79 +129,32 @@ public class CertificationActivity extends AppCompatActivity {
     public void isTouchBookmark() {
 
         String text;
+        int count = -1, num_temp;
 
-        boolean flag_1, flag_2 = false;
-        int count = 0, i;
-        String[] temp_array = new String[max];
+        while(true) {
+            count++;
+            text = PreferenceManager.getString(certificationactivity, Integer.toString(count));
 
-        while(count < temp_array.length) {
-            for(int j = 0; j < temp_array.length; j++) {
-                text = PreferenceManager.getString(getApplicationContext(), Integer.toString(j));
-
-                if (text.equals(title)) {
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
-                    builder.setTitle("오류")
-                            .setMessage("이미 존재하는 북마크입니다.")
-                            .setCancelable(false)
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    return;
-                                }
-                            }).show();
-                    flag_2 = true;
-                    break;
-                }
+            if (text.equals(title)) { // already has bookmark of this certification
+                Broadcast.AlertBuild(CertificationActivity.this, "메시지", "이미 존재하는 북마크입니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
+                        })
+                        .show();
+                return ;
             }
 
-            if(flag_2)
-                break;
-
-            while(true) {
-                i = PreferenceManager.getInt(getApplicationContext(), "") + 1;
-                PreferenceManager.setString(getApplicationContext(), Integer.toString(i), title);
-                PreferenceManager.setInt(getApplicationContext(), "", i);
-                flag_1 = true;
-                count++;
-                Snackbar.make(certification_layout, "북마크에 추가했어염", Snackbar.LENGTH_SHORT).show();
-                break;
-            }
-            if(flag_1)
+            if(count == max)
                 break;
         }
-    }
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
-    private void isNetworkWorking() {
-        if (!isNetworkConnected()) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(CertificationActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .show();
-            return;
-        }
+        num_temp = PreferenceManager.getInt(certificationactivity, "") + 1;
+        PreferenceManager.setString(certificationactivity, Integer.toString(num_temp), title);
+        PreferenceManager.setInt(certificationactivity, "", num_temp);
+        Snackbar.make(certification_layout, "북마크에 추가했습니다.", Snackbar.LENGTH_SHORT).show();
     }
 
     public void showCertification() {
@@ -206,8 +164,8 @@ public class CertificationActivity extends AppCompatActivity {
         Call<List<Recycler_certification>> call = connectDB.certification_data();
 
         call.enqueue(new Callback<List<Recycler_certification>>() {
-            @Override
 
+            @Override
             public void onResponse(Call<List<Recycler_certification>> call, Response<List<Recycler_certification>> response) {
                 List<Recycler_certification> result = response.body();
 
@@ -223,6 +181,10 @@ public class CertificationActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Recycler_certification>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
+                Broadcast.AlertBuild(certificationactivity, "에러", "서버 연결에 실패했습니다.")
+                        .setPositiveButton("확인", null)
+                        .setNegativeButton("취소", null)
+                        .show();
             }
         });
     }
@@ -304,7 +266,7 @@ public class CertificationActivity extends AppCompatActivity {
 
             dialog = new ProgressDialog(CertificationActivity.this);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("데이터를 불러오는 중입니다.");
+            dialog.setMessage("" + title + " 정보를 불러오는 중입니다.");
             dialog.show();
             dialog.setCancelable(false);
         }

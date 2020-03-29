@@ -13,6 +13,16 @@
         <item name="cardElevation">8dp</item>
     </style>
 
+    <style name="AppThemeDialog" parent="AppTheme.NoActionBar" >
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="Material.NoActionBar" parent="Theme.MaterialComponents.NoActionBar" >
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

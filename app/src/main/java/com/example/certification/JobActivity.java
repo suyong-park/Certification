@@ -5,19 +5,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,7 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,9 @@ public class JobActivity extends AppCompatActivity {
     private JobDetailAdapter mAdapter;
     ProgressDialog dialog;
 
-    String name, certification, certification_num;
-    String title[], number[];
+    String name, certification;
+    String title[];
+    boolean from_search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class JobActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
+        from_search = intent.getBooleanExtra("search", false);
 
         setTitle(name);
 
@@ -64,7 +66,7 @@ public class JobActivity extends AppCompatActivity {
         mAdapter = new JobDetailAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        isNetworkWorking();
+        Broadcast.isNetworkWorking(JobActivity.this);
 
         Asynctask asyncTask = new Asynctask();
         asyncTask.execute();
@@ -83,52 +85,21 @@ public class JobActivity extends AppCompatActivity {
                     if (result.size() != 0)
                         for (int i = 0; i < result.size(); i++) {
                             if(name.equals(result.get(i).getName())) {
-                                mAdapter.add(new Recycler_job(result.get(i).getName(), result.get(i).getCategory(), result.get(i).getDescription(), result.get(i).getLink(), result.get(i).getNum(), result.get(i).getCertification_name()));
+                                mAdapter.add(new Recycler_job(result.get(i).getName(), result.get(i).getCategory(), result.get(i).getDescription(), result.get(i).getLink(), result.get(i).getCertification_name()));
                                 certification = result.get(i).getCertification_name();
-                                certification_num = result.get(i).getNum();
                                 title = certification.split(",");
-                                number = certification_num.split(",");
                             }
                         }
             }
             @Override
             public void onFailure(Call<List<Recycler_job>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
+                Broadcast.AlertBuild(JobActivity, "에러", "서버 연결에 실패했습니다.")
+                        .setPositiveButton("확인", null)
+                        .setNegativeButton("취소", null)
+                        .show();
             }
         });
-    }
-
-    private boolean isNetworkConnected() { // Checking the Network is Connected
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
-    private void isNetworkWorking() {
-        if (!isNetworkConnected()) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
-            builder.setTitle("메시지")
-                    .setMessage("네트워크 연결 상태를 확인해 주세요.")
-                    .setCancelable(false)
-                    .setPositiveButton("설정", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .show();
-            return;
-        }
     }
 
     @Override
@@ -144,6 +115,10 @@ public class JobActivity extends AppCompatActivity {
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
             case R.id.to_home :
+                if(from_search) {
+                    finish();
+                    break;
+                }
                 MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
                 DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
                 finish();
@@ -151,8 +126,9 @@ public class JobActivity extends AppCompatActivity {
                 mainjob.finish();
                 break;
             case R.id.to_bookmark :
-                Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                Intent intent = new Intent(JobActivity, BookmarkActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.to_certification :
                 isTouchCertification();
@@ -163,41 +139,54 @@ public class JobActivity extends AppCompatActivity {
 
     public void isTouchCertification() {
         final int[] selectedIndex = {0};
+        final boolean[] flag = {true};
 
         for(int i = 0; i < title.length; i++)
             title[i] = title[i].trim();
 
         if(title.length == 1) {
-            Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
+            Intent intent = new Intent(JobActivity, CertificationActivity.class);
             intent.putExtra("name", title[0]);
-            intent.putExtra("num", number[0]);
             intent.putExtra("job", true);
+            intent.putExtra("search", from_search);
             startActivity(intent);
             return ;
         }
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(JobActivity.this);
-        builder.setTitle("어디로 이동할까요?")
+        Broadcast.AlertBuild(JobActivity.this, "어디로 이동하시겠습니까?", null)
                 .setSingleChoiceItems(title, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        flag[0] = false;
                         selectedIndex[0] = which;
                     }
                 })
                 .setPositiveButton("이동", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getApplicationContext(), CertificationActivity.class);
-                        intent.putExtra("name", title[selectedIndex[0]]);
-                        intent.putExtra("num", number[selectedIndex[0]]);
-                        intent.putExtra("job", true);
-                        startActivity(intent);
+                        if (flag[0]) {
+                            LinearLayout job = findViewById(R.id.linear_job);
+
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            if (Build.VERSION.SDK_INT >= 26)
+                                vibrator.vibrate(VibrationEffect.createOneShot(150, 80));
+                            else
+                                vibrator.vibrate(150);
+                            Snackbar.make(job, "항목을 선택하세요.", Snackbar.LENGTH_SHORT).show();
+                            isTouchCertification();
+                        } else {
+                            Intent intent = new Intent(JobActivity, CertificationActivity.class);
+                            intent.putExtra("name", title[selectedIndex[0]]);
+                            intent.putExtra("job", true);
+                            intent.putExtra("search", from_search);
+                            startActivity(intent);
+                        }
                     }
                 })
                 .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        return ;
+                        return;
                     }
                 })
                 .show();
@@ -259,7 +248,7 @@ public class JobActivity extends AppCompatActivity {
 
             dialog = new ProgressDialog(JobActivity.this);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("데이터를 불러오는 중입니다.");
+            dialog.setMessage("" + name + " 정보를 불러오는 중입니다.");
             dialog.show();
             dialog.setCancelable(false);
         }

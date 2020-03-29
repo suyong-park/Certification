@@ -25,7 +25,7 @@ public interface ConnectDB {
 
     @FormUrlEncoded
     @POST("search.php")
-    Call<String> search(
-            @Field("search") String search
+    Call<List<Recycler_onething>> search(
+            @Field("query") String query
     );
 }
