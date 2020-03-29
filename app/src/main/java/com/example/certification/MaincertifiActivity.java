@@ -42,18 +42,18 @@ public class MaincertifiActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.category_certification);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MaincertifiActivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new MaincertifiAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(MaincertifiActivity, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
 
-        Broadcast.isNetworkWorking(MaincertifiActivity.this);
+        Broadcast.isNetworkWorking(MaincertifiActivity);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -63,7 +63,7 @@ public class MaincertifiActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(MaincertifiActivity.this, DetailcertifiActivity.class);
+                    Intent it = new Intent(MaincertifiActivity, DetailcertifiActivity.class);
                     it.putExtra("category", mAdapter.getRecycler_title(currentPos).getCategory());
                     startActivity(it);
                     return true;

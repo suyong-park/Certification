@@ -26,10 +26,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextInputLayout text_layout;
     TextInputEditText editText;
     DrawerLayout drawer;
-    Toolbar toolbar;
+    BottomAppBar bottomAppBar;
     Spinner spinner;
 
     @Override
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(!isFirst) {
             PreferenceManager.setBoolean(mainActivity, "checkIsFirst", true);
 
-            Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
+            Intent intent = new Intent(mainActivity, TutorialActivity.class);
             startActivity(intent);
             finish();
             overridePendingTransition(0, 0);
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         text_layout = findViewById(R.id.text_layout);
         drawer = findViewById(R.id.drawer_layout);
         editText = findViewById(R.id.editText);
-        toolbar = findViewById(R.id.toolbar);
+        bottomAppBar = findViewById(R.id.bottom_app_bar);
 
         for(int i = 0; i < 5; i++) {
             switch (i) {
@@ -138,21 +138,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter.addAll(title);
         spinner.setAdapter(adapter);
 
-        setSupportActionBar(toolbar);
+        bottomAppBar.setTitle(R.string.app_name);
+        setSupportActionBar(bottomAppBar);
 
         final EditText edit = text_layout.getEditText();
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) { // Keyboard down if user touch the screen.
-                    if(isFabOpen) {
-                        fab[0].setImageResource(R.drawable.icon_unfold_more);
-                        for (int i = 1; i < 5; i++) {
-                            fab[i].startAnimation(fab_close);
-                            fab[i].setClickable(false);
-                        }
-                        isFabOpen = false;
+                if(isFabOpen) {
+                    fab[0].setImageResource(R.drawable.icon_unfold_more);
+                    for (int i = 1; i < 5; i++) {
+                        fab[i].startAnimation(fab_close);
+                        fab[i].setClickable(false);
                     }
+                    isFabOpen = false;
+                }
+                if(event.getAction() == MotionEvent.ACTION_DOWN) { // Keyboard down if user touch the screen.
                     downKeyboard();
                     edit.clearFocus();
                     return true;
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             return false;
                         }
                         if(editText.getText().length() < 10) {
-                            Broadcast.isNetworkWorking(MainActivity.this);
+                            Broadcast.isNetworkWorking(mainActivity);
                             searchResult();
                         }
                         break;
@@ -208,12 +209,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(mainActivity, drawer, bottomAppBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) { // Open Shortcut menu.
                 super.onDrawerOpened(drawerView);
-                edit.clearFocus();
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                if(isFabOpen) {
+                    fab[0].setImageResource(R.drawable.icon_unfold_more);
+                    for(int i = 1; i < 5; i++) {
+                        fab[i].startAnimation(fab_close);
+                        fab[i].setClickable(false);
+                    }
+                    isFabOpen = false;
+                }
             }
         };
 
@@ -265,14 +271,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (result.size() != 0) {
                         for (int i = 0; i < result.size(); i++)
                             title_name[i] = result.get(i).getTitle();
-                        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                        Intent intent = new Intent(mainActivity, SearchActivity.class);
                         intent.putExtra("title_name", title_name);
                         intent.putExtra("category", search_category);
                         intent.putExtra("search_word", search_word);
                         startActivity(intent);
                     }
                     else {
-                        Broadcast.AlertBuild(MainActivity.this, "메시지", search_word + " 와(과) 관련된 검색 결과가 없습니다.")
+                        Broadcast.AlertBuild(mainActivity, "메시지", search_word + " 와(과) 관련된 검색 결과가 없습니다.")
                         .setPositiveButton("확인", null)
                         .show();
                         return ;
@@ -316,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        Intent intent;
+        Intent intent, title;
         switch (item.getItemId()) {
             case R.id.certification :
                 intent = new Intent(mainActivity, MaincertifiActivity.class);
@@ -340,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.web :
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
-                startActivity(intent);
+                title = Intent.createChooser(intent, "웹사이트로 보기");
+                startActivity(title);
                 return true;
             case R.id.share :
                 intent = new Intent();
@@ -348,8 +355,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "안녕 !! 이건 공유하기");
                 intent.putExtra(Intent.EXTRA_TEXT, "이런 앱이 있당!!");
-                Intent chooser = Intent.createChooser(intent, "공유");
-                startActivity(chooser);
+                title = Intent.createChooser(intent, "공유하기");
+                startActivity(title);
                 return true;
             case R.id.send :
                 intent = new Intent(Intent.ACTION_SEND);
@@ -358,7 +365,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra(Intent.EXTRA_EMAIL, address);
                 intent.putExtra(Intent.EXTRA_SUBJECT,"<자격증>개발자에게 보내는 조언 및 건의");
                 intent.putExtra(Intent.EXTRA_TEXT,"**불편사항 혹은 건의사항의 경우 앱 버전과 안드로이드 기기 종류를 함께 보내주시면 감사하겠습니다.\n앱 버전: \n기기명: ");
-                startActivity(intent);
+                title = Intent.createChooser(intent, "개발자에게 보내는 글");
+                startActivity(title);
                 return true;
         }
         drawer.closeDrawer(GravityCompat.START);

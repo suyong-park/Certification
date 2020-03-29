@@ -1,14 +1,11 @@
 package com.example.certification;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -37,9 +34,7 @@ import retrofit2.Response;
 public class JobActivity extends AppCompatActivity {
 
     public static Activity JobActivity;
-    Handler handler = new Handler();
     private JobDetailAdapter mAdapter;
-    ProgressDialog dialog;
 
     String name, certification;
     String title[];
@@ -68,8 +63,7 @@ public class JobActivity extends AppCompatActivity {
 
         Broadcast.isNetworkWorking(JobActivity.this);
 
-        Asynctask asyncTask = new Asynctask();
-        asyncTask.execute();
+        ConnectDB();
     }
 
     public void ConnectDB() {
@@ -238,39 +232,6 @@ public class JobActivity extends AppCompatActivity {
         @Override
         public int getItemCount() { // Count of Recycler View items.
             return mlist.size();
-        }
-    }
-
-    class Asynctask extends AsyncTask<Void, Void, Void> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            dialog = new ProgressDialog(JobActivity.this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("" + name + " 정보를 불러오는 중입니다.");
-            dialog.show();
-            dialog.setCancelable(false);
-        }
-
-        protected Void doInBackground(Void ... values) {
-
-            try {
-                ConnectDB();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dismiss();
-                }
-            }, 700);
         }
     }
 }

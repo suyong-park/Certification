@@ -51,7 +51,7 @@ public class SearchActivity extends AppCompatActivity {
             mAdapter.add(new Recycler_onething(title_names[i]));
 
         Snackbar.make(linearLayout, search_word + " 와(과) 관련된 검색 결과입니다.", Snackbar.LENGTH_SHORT).show();
-        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(searchActivity, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
@@ -67,9 +67,9 @@ public class SearchActivity extends AppCompatActivity {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent intent;
                     if(isCertification.equals("자격증")) // User search for certification
-                        intent = new Intent(SearchActivity.this, CertificationActivity.class);
+                        intent = new Intent(searchActivity, CertificationActivity.class);
                     else
-                        intent = new Intent(SearchActivity.this, JobActivity.class);
+                        intent = new Intent(searchActivity, JobActivity.class);
                     intent.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     intent.putExtra("search", true);
                     startActivity(intent);

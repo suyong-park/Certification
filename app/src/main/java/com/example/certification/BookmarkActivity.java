@@ -65,7 +65,7 @@ public class BookmarkActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(BookmarkActivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new BookmarkAdapter();
         recyclerView.setAdapter(mAdapter);
@@ -81,7 +81,7 @@ public class BookmarkActivity extends AppCompatActivity {
         else
             blank.setVisibility(View.GONE);
 
-        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(BookmarkActivity, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
@@ -95,7 +95,7 @@ public class BookmarkActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(BookmarkActivity.this, CertificationActivity.class);
+                    Intent it = new Intent(BookmarkActivity, CertificationActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     it.putExtra("bookmark", true);
                     startActivity(it);
@@ -111,7 +111,7 @@ public class BookmarkActivity extends AppCompatActivity {
             }
         });
 
-        enableSwipeToDelete(BookmarkActivity.this);
+        enableSwipeToDelete(BookmarkActivity);
     }
 
     private void enableSwipeToDelete(Activity activity) {

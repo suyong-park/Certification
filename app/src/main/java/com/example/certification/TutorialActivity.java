@@ -1,8 +1,5 @@
 package com.example.certification;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,6 +14,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 public class TutorialActivity extends AppCompatActivity {
 
@@ -72,9 +72,9 @@ public class TutorialActivity extends AppCompatActivity {
         container.removeAllViews();
         present_page = new TextView(this);
         present_page.setText("" + (currentPage  + 1)+ "/" + "" + layouts.length);
-        present_page.setTextSize(20);
+        present_page.setTextSize(14);
         present_page.setPadding(0, 25,0, 0);
-        present_page.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/font_view_page.ttf")); // Add font
+        present_page.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/font_all.ttf")); // Add font
         container.addView(present_page);
     }
 

@@ -18,8 +18,8 @@
             android:id="@+id/fab_certification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="340dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="345dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="bottom|end"
             android:visibility="invisible"
             android:src="@drawable/icon_certification"
@@ -31,8 +31,8 @@
             android:id="@+id/fab_company"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="260dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="265dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="bottom|end"
             android:visibility="invisible"
             android:src="@drawable/icon_company"
@@ -44,8 +44,8 @@
             android:id="@+id/fab_bookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="180dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="185dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="bottom|end"
             android:visibility="invisible"
             android:src="@drawable/icon_bookmark"
@@ -57,8 +57,8 @@
             android:id="@+id/fab_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="105dp"
+            android:layout_marginRight="30dp"
             android:layout_gravity="bottom|end"
             android:visibility="invisible"
             android:src="@drawable/icon_calendar"
@@ -70,27 +70,29 @@
             android:id="@+id/fab_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/fab_main"
-            android:layout_marginBottom="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_gravity="bottom|end"
             android:src="@drawable/icon_unfold_more"
             app:borderWidth="0dp"
             app:fabSize="normal"
+            app:layout_anchor="@id/bottom_app_bar"
             />
 
-        <com.google.android.material.appbar.AppBarLayout
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay" >
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            android:layout_gravity="bottom"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabAlignmentMode="end"
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
+            app:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar" >
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-        </com.google.android.material.appbar.AppBarLayout>
+                android:layout_height="match_parent"
+                android:text="@string/app_name"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                />
+        </com.google.android.material.bottomappbar.BottomAppBar>
 
         <LinearLayout
             android:layout_width="match_parent"

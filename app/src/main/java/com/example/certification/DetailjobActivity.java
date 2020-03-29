@@ -1,11 +1,8 @@
 package com.example.certification;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -32,9 +29,6 @@ public class DetailjobActivity extends AppCompatActivity {
     public static Activity DetailjobActivity;
     private DetailjobAdapter mAdapter;
     public GestureDetector gesture_detector;
-    Handler handler = new Handler();
-
-    ProgressDialog dialog;
 
     String title;
 
@@ -53,18 +47,18 @@ public class DetailjobActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailjobActivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new DetailjobAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(DetailjobActivity, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
 
-        Broadcast.isNetworkWorking(DetailjobActivity.this);
+        Broadcast.isNetworkWorking(DetailjobActivity);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -74,7 +68,7 @@ public class DetailjobActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(DetailjobActivity.this, JobActivity.class);
+                    Intent it = new Intent(DetailjobActivity, JobActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     startActivity(it);
                     return true;
@@ -91,8 +85,7 @@ public class DetailjobActivity extends AppCompatActivity {
             }
         });
 
-        Asynctask asyncTask = new Asynctask();
-        asyncTask.execute();
+        ConnectDB();
     }
 
     public void ConnectDB() {
@@ -173,39 +166,6 @@ public class DetailjobActivity extends AppCompatActivity {
 
         public Recycler_category getRecycler_title(int pos) {
             return mlist.get(pos);
-        }
-    }
-
-    class Asynctask extends AsyncTask<Void, Void, Void> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            dialog = new ProgressDialog(DetailjobActivity.this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("" + title + " 정보를 불러오는 중입니다.");
-            dialog.show();
-            dialog.setCancelable(false);
-        }
-
-        protected Void doInBackground(Void ... values) {
-
-            try {
-                ConnectDB();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dismiss();
-                }
-            }, 700);
         }
     }
 }

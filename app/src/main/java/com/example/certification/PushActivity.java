@@ -121,13 +121,13 @@ public class PushActivity extends AppCompatActivity {
                 manager.createNotificationChannel(new NotificationChannel(
                         CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
                 ));
-            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+            builder = new NotificationCompat.Builder(PushActivity, CHANNEL_ID);
         }
         else
             builder = new NotificationCompat.Builder(PushActivity, CHANNEL_ID);
 
-        Intent intent = new Intent(this, PushActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(PushActivity, PushActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(PushActivity, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentTitle("자격증어플 입니다.")
                 .setContentText("푸시알림에 동의하셨습니다.")
                 .setSmallIcon(android.R.drawable.ic_menu_view)

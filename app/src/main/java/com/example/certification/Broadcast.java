@@ -138,13 +138,13 @@ public class Broadcast {
         map.put("직업", map_job);
     }
 
-    static String Filtering(String category, String search_word) { // 이때 text값은 자격증 or 직업
+    static String Filtering(String category, String search_word) {
         HashMap<String, String> filter = map.get(category);
 
-        if (filter.containsKey(search_word))// 키값이 있는 경우
+        if (filter.containsKey(search_word))
             search_word = filter.get(search_word);  // TODO : 필터링 기능 수행 해당 요소의 value 값을 가져온다.
 
-        return changeSearch(search_word, category); // search_word 는 검색어임. 따라서 수정 필요함.
+        return changeSearch(search_word, category);
     }
 }
 

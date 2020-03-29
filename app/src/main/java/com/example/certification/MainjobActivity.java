@@ -42,18 +42,18 @@ public class MainjobActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.category_job);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainjobActivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new MainjobAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(MainjobActivity, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
         });
 
-        Broadcast.isNetworkWorking(MainjobActivity.this);
+        Broadcast.isNetworkWorking(MainjobActivity);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -63,7 +63,7 @@ public class MainjobActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(MainjobActivity.this, DetailjobActivity.class);
+                    Intent it = new Intent(MainjobActivity, DetailjobActivity.class);
                     it.putExtra("category", mAdapter.getRecycler_title(currentPos).getCategory());
                     startActivity(it);
                     return true;

@@ -1,10 +1,8 @@
 package com.example.certification;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -34,7 +32,6 @@ public class CertificationActivity extends AppCompatActivity {
 
     public static Activity certificationactivity;
     private CertificationDetailAdapter mAdapter;
-    ProgressDialog dialog;
     LinearLayout certification_layout;
 
     boolean from_job, from_bookmark, from_search;
@@ -61,18 +58,17 @@ public class CertificationActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Broadcast.isNetworkWorking(CertificationActivity.this);
+        Broadcast.isNetworkWorking(certificationactivity);
 
         certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(certificationactivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new CertificationDetailAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        Asynctask asynctask = new Asynctask();
-        asynctask.execute();
+        downloadCertification();
     }
 
     @Override
@@ -90,7 +86,7 @@ public class CertificationActivity extends AppCompatActivity {
                 finish(); // If touch the back key on tool bar, then finish present activity.
                 return true;
             case R.id.to_home:
-                intent = new Intent(this, MainActivity.class);
+                intent = new Intent(certificationactivity, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
@@ -136,7 +132,7 @@ public class CertificationActivity extends AppCompatActivity {
             text = PreferenceManager.getString(certificationactivity, Integer.toString(count));
 
             if (text.equals(title)) { // already has bookmark of this certification
-                Broadcast.AlertBuild(CertificationActivity.this, "메시지", "이미 존재하는 북마크입니다.")
+                Broadcast.AlertBuild(certificationactivity, "메시지", "이미 존재하는 북마크입니다.")
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -157,7 +153,7 @@ public class CertificationActivity extends AppCompatActivity {
         Snackbar.make(certification_layout, "북마크에 추가했습니다.", Snackbar.LENGTH_SHORT).show();
     }
 
-    public void showCertification() {
+    public void downloadCertification() {
 
         // TODO : 시험과목 , 로 되어있는건 분할해야함.
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
@@ -256,39 +252,6 @@ public class CertificationActivity extends AppCompatActivity {
         @Override
         public int getItemCount() { // Count of Recycler View items.
             return mlist.size();
-        }
-    }
-
-    class Asynctask extends AsyncTask<Void, Void, Void> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            dialog = new ProgressDialog(CertificationActivity.this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("" + title + " 정보를 불러오는 중입니다.");
-            dialog.show();
-            dialog.setCancelable(false);
-        }
-
-        protected Void doInBackground(Void ... values) {
-
-            try {
-                showCertification();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dismiss();
-                }
-            }, 700);
         }
     }
 }

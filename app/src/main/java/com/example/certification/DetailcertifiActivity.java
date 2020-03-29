@@ -1,11 +1,8 @@
 package com.example.certification;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -34,9 +31,6 @@ public class DetailcertifiActivity extends AppCompatActivity {
     private CertificationTitleAdapter mAdapter;
     public GestureDetector gesture_detector;
 
-    ProgressDialog dialog;
-    Handler handler = new Handler();
-
     String category;
     Button bookmark;
 
@@ -54,17 +48,17 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Broadcast.isNetworkWorking(DetailcertifiActivity.this);
+        Broadcast.isNetworkWorking(DetailcertifiActivity);
 
         bookmark = (Button) findViewById(R.id.bookmark);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailcertifiActivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new CertificationTitleAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        gesture_detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+        gesture_detector = new GestureDetector(DetailcertifiActivity, new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
@@ -78,7 +72,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent it = new Intent(DetailcertifiActivity.this, CertificationActivity.class);
+                    Intent it = new Intent(DetailcertifiActivity, CertificationActivity.class);
                     it.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     startActivity(it);
                     return true;
@@ -97,8 +91,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
             }
         });
 
-        Asynctask asyncTask = new Asynctask();
-        asyncTask.execute();
+        ConnectDB();
     }
 
     @Override
@@ -179,39 +172,6 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
         public Recycler_category getRecycler_title(int pos) {
             return mlist.get(pos);
-        }
-    }
-
-    class Asynctask extends AsyncTask<Void, Void, Void> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            dialog = new ProgressDialog(DetailcertifiActivity.this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("" + category + " 정보를 불러오는 중입니다.");
-            dialog.show();
-            dialog.setCancelable(false);
-        }
-
-        protected Void doInBackground(Void ... values) {
-
-            try {
-                ConnectDB();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dismiss();
-                }
-            }, 500);
         }
     }
 }
