@@ -1,0 +1,58 @@
+@charset "UTF-8";
+
+*{
+	margin:0;
+	padding:0;
+}
+a {
+	padding-left:30px;
+	padding-right:30px;
+	text-decoration: none;
+}
+a:hover {
+  border: solid 4px #5e9bff;
+  border-radius: 4px;
+}
+
+#header, #footer {
+	
+	text-decoration: none; /* 링크의 밑줄 생기는 거 없애기 */
+	background-color: #d6e1ff;
+	height: 85px;
+	width: 100%;
+	text-align: center;
+	line-height: 85px;
+	font-size: 30px;
+}
+
+#main {
+	min-height: 650px;
+	text-align: center;
+	font-size: 20px;
+	padding: 15px;
+}
+
+input {
+ border: solid 4px #d6e1ff;
+ padding: 14px 20px;
+ margin: 8px 0;
+}
+
+.button {
+  width: 100%;
+  background-color: #d6e1ff;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+	background: #5e9bff; 
+}
+
+h1 {
+	color: #5e9bff;
+}

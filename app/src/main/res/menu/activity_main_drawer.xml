@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/certification"
+            android:icon="@drawable/icon_certification"
+            android:title="@string/menu_certification" />
+        <item
+            android:id="@+id/job"
+            android:icon="@drawable/icon_company"
+            android:title="@string/menu_job" />
+        <item
+            android:id="@+id/bookmark"
+            android:icon="@drawable/icon_bookmark"
+            android:title="@string/menu_bookmark" />
+        <item
+            android:id="@+id/calendar_pop"
+            android:icon="@drawable/icon_calendar"
+            android:title="@string/menu_home" />
+    </group>
+
+    <item android:title="Communication">
+        <menu>
+            <item
+                android:id="@+id/push"
+                android:icon="@drawable/icon_push"
+                android:title="@string/menu_push" />
+            <item
+                android:id="@+id/web"
+                android:icon="@drawable/icon_website"
+                android:title="@string/menu_website" />
+            <item
+                android:id="@+id/share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/menu_share" />
+            <item
+                android:id="@+id/send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/menu_send" />
+        </menu>
+    </item>
+
+</menu>

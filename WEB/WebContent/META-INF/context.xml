@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="certifi"
+		path="/certifi"
+		reloadable="true"
+		source="org.eclipse.jst.jee.server:certifi">
+
+<Resource name="jdbc/oracle"
+  type="javax.sql.DataSource"
+  driverClassName="oracle.jdbc.driver.OracleDriver"
+  url="jdbc:oracle:thin:@//certification.ch3ulmd2qtg7.ap-northeast-2.rds.amazonaws.com:1521/certifi"
+  username="certifi"
+  password="certifi"
+  maxActive="20"
+  maxIdle="20"
+  minIdle="10"
+  maxWait="-1" /> 
+</Context>
+
+
+
+
+
+
+
+
+
+
+
