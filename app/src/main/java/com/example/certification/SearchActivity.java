@@ -39,6 +39,8 @@ public class SearchActivity extends AppCompatActivity {
         final String isCertification = intent.getStringExtra("category");
         String search_word = intent.getStringExtra("search_word");
 
+        setTitle("" + search_word + " 관련 검색 결과");
+
         LinearLayout linearLayout = findViewById(R.id.linear);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.search_recycler_view);

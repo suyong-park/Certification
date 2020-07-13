@@ -43,7 +43,7 @@ public class Broadcast {
             return false;
     }
 
-    static void isNetworkWorking(final Activity activity) {
+    static void isNetworkWorking(final Activity activity, final boolean ismain) {
         if (!Broadcast.isNetworkConnected(activity)) {
             Broadcast.AlertBuild(activity, "메시지", "네트워크 연결 상태를 확인해 주세요.")
                     .setPositiveButton("설정", new DialogInterface.OnClickListener() {
@@ -56,6 +56,8 @@ public class Broadcast {
                     .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            if(ismain)
+                                return;
                             activity.finish();
                         }
                     })

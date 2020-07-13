@@ -61,7 +61,7 @@ public class JobActivity extends AppCompatActivity {
         mAdapter = new JobDetailAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        Broadcast.isNetworkWorking(JobActivity.this);
+        Broadcast.isNetworkWorking(JobActivity.this, false);
 
         ConnectDB();
     }

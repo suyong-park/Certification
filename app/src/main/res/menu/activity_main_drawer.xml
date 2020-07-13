@@ -33,10 +33,6 @@
                 android:icon="@drawable/icon_website"
                 android:title="@string/menu_website" />
             <item
-                android:id="@+id/share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
-            <item
                 android:id="@+id/send"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/menu_send" />

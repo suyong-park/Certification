@@ -58,7 +58,7 @@ public class DetailjobActivity extends AppCompatActivity {
             }
         });
 
-        Broadcast.isNetworkWorking(DetailjobActivity);
+        Broadcast.isNetworkWorking(DetailjobActivity, false);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {

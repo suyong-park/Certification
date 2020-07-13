@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,8 +37,6 @@ public class CertificationActivity extends AppCompatActivity {
     String title;
     int max = 1;
 
-    Handler handler = new Handler();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +55,7 @@ public class CertificationActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Broadcast.isNetworkWorking(certificationactivity);
+        Broadcast.isNetworkWorking(certificationactivity, false);
 
         certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);

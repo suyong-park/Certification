@@ -53,7 +53,7 @@ public class MaincertifiActivity extends AppCompatActivity {
             }
         });
 
-        Broadcast.isNetworkWorking(MaincertifiActivity);
+        Broadcast.isNetworkWorking(MaincertifiActivity, false);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {

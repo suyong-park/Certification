@@ -15,8 +15,8 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        //PreferenceManager.removeKey(getApplicationContext(), "checkIsFirst"); // for test !!!
-        //PreferenceManager.clear(getApplicationContext()); // for test !!!
+        PreferenceManager.removeKey(getApplicationContext(), "checkIsFirst"); // for test !!!
+        PreferenceManager.clear(getApplicationContext()); // for test !!!
 
         ImageView splash = (ImageView) findViewById(R.id.gif_splash);
         Glide.with(this).load(R.drawable.splash).into(splash);

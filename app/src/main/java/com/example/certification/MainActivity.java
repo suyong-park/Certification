@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             return false;
                         }
                         if(editText.getText().length() < 10) {
-                            Broadcast.isNetworkWorking(mainActivity);
+                            Broadcast.isNetworkWorking(mainActivity, true);
                             searchResult();
                         }
                         break;
@@ -347,15 +347,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.web :
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com"));
                 title = Intent.createChooser(intent, "웹사이트로 보기");
-                startActivity(title);
-                return true;
-            case R.id.share :
-                intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_SUBJECT, "안녕 !! 이건 공유하기");
-                intent.putExtra(Intent.EXTRA_TEXT, "이런 앱이 있당!!");
-                title = Intent.createChooser(intent, "공유하기");
                 startActivity(title);
                 return true;
             case R.id.send :

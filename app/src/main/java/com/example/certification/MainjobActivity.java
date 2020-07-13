@@ -53,7 +53,7 @@ public class MainjobActivity extends AppCompatActivity {
             }
         });
 
-        Broadcast.isNetworkWorking(MainjobActivity);
+        Broadcast.isNetworkWorking(MainjobActivity, false);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {

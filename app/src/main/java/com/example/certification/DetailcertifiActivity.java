@@ -48,7 +48,7 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Broadcast.isNetworkWorking(DetailcertifiActivity);
+        Broadcast.isNetworkWorking(DetailcertifiActivity, false);
 
         bookmark = (Button) findViewById(R.id.bookmark);
 
@@ -82,12 +82,10 @@ public class DetailcertifiActivity extends AppCompatActivity {
 
             @Override
             public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
             }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
             }
         });
 

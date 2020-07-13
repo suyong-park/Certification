@@ -54,7 +54,6 @@ public class PushActivity extends AppCompatActivity {
         state[2] = PreferenceManager.getBoolean(PushActivity, "switch_practical");
         state[3] = PreferenceManager.getBoolean(PushActivity, "switch_success");
 
-
         for(int i = 0; i < state.length; i++) {
             final int count = i;
             if(state[i])
@@ -97,11 +96,11 @@ public class PushActivity extends AppCompatActivity {
                                 PreferenceManager.setBoolean(PushActivity, "switch_success", isChecked);
                                 break;
                         }
+                        Snackbar.make(linearLayout, "푸시알림 해제하셨습니다.", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             });
         }
-
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override

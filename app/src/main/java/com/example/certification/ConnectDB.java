@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 
 public interface ConnectDB {
 
-    String IP_ADDRESS = "http://13.124.225.218/certifi/";
+    String IP_ADDRESS = "http://15.164.49.117/certifi/";
 
     @POST("certification_category_data.php")
     Call<List<Recycler_category>> certification_category_data();
