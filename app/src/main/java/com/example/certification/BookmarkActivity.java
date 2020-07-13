@@ -47,7 +47,6 @@ public class BookmarkActivity extends AppCompatActivity {
 
     TextView blank;
     LinearLayout bookmark_layout;
-
     String[] components;
 
     @Override
