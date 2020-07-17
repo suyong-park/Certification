@@ -38,16 +38,7 @@
             android:name=".DetailcertifiActivity"
             android:screenOrientation="locked" />
         <activity
-            android:name=".DetailjobActivity"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".JobActivity"
-            android:screenOrientation="locked" />
-        <activity
             android:name=".MaincertifiActivity"
-            android:screenOrientation="locked" />
-        <activity
-            android:name=".MainjobActivity"
             android:screenOrientation="locked" />
         <activity
             android:name=".PushActivity"

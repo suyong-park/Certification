@@ -33,7 +33,7 @@ public class CertificationActivity extends AppCompatActivity {
     private CertificationDetailAdapter mAdapter;
     LinearLayout certification_layout;
 
-    boolean from_job, from_bookmark, from_search;
+    boolean from_bookmark, from_search;
     String title;
     int max = 1;
 
@@ -47,7 +47,6 @@ public class CertificationActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         title = intent.getStringExtra("name");  // name of certification
-        from_job = intent.getBooleanExtra("job", false);
         from_bookmark = intent.getBooleanExtra("bookmark", false);
         from_search = intent.getBooleanExtra("search", false);
 
@@ -89,28 +88,13 @@ public class CertificationActivity extends AppCompatActivity {
                 break;
             case R.id.to_bookmark:
                 intent = new Intent(certificationactivity, BookmarkActivity.class);
-                if (from_job) { // Move in original order from job activity.
-                    if(from_search) {
-                        finish();
-                        startActivity(intent);
-                        break;
-                    }
-
-                    JobActivity job = (JobActivity) JobActivity.JobActivity;
-                    MainjobActivity mainjob = (MainjobActivity) MainjobActivity.MainjobActivity;
-                    DetailjobActivity detailjob = (DetailjobActivity) DetailjobActivity.DetailjobActivity;
-
-                    startActivity(intent);
+                if(from_search) {
                     finish();
-
-                    job.finish();
-                    detailjob.finish();
-                    mainjob.finish();
+                    startActivity(intent);
+                    break;
                 }
-                else if (from_bookmark)
-                    finish();
-                else if (!from_job && !from_bookmark)  // Move in original order from main activity.
-                    startActivity(intent);
+
+                startActivity(intent);
                 break;
             case R.id.is_bookmark:
                 isTouchBookmark();
@@ -190,8 +174,6 @@ public class CertificationActivity extends AppCompatActivity {
 
             TextView name;
             TextView description;
-            TextView company;
-            TextView job;
             TextView link;
             TextView subject_written;
             TextView subject_practical;
@@ -204,8 +186,6 @@ public class CertificationActivity extends AppCompatActivity {
                 super(itemView);
                 name = (TextView) itemView.findViewById(R.id.name);
                 description= (TextView) itemView.findViewById(R.id.description);
-                company = (TextView) itemView.findViewById(R.id.company);
-                job = (TextView) itemView.findViewById(R.id.job);
                 link = (TextView) itemView.findViewById(R.id.link);
                 subject_written = (TextView) itemView.findViewById(R.id.subject_written);
                 subject_practical = (TextView) itemView.findViewById(R.id.subject_practical);
@@ -218,8 +198,6 @@ public class CertificationActivity extends AppCompatActivity {
             public void setData(Recycler_certification data) {
                 name.setText(data.getNAME());
                 description.setText(data.getDESCRIPTION());
-                company.setText(data.getCOMPANY());
-                job.setText(data.getJOB());
                 link.setText(data.getLINK());
                 subject_written.setText(data.getSUBJECT_WRITTEN());
                 subject_practical.setText(data.getSUBJECT_PRACTICAL());

@@ -67,16 +67,19 @@ public class PushActivity extends AppCompatActivity {
                         switch (count) {
                             case 0 :
                                 PreferenceManager.setBoolean(PushActivity, "switch_receipt", isChecked);
-                                showNotice();
+                                showNotice("시험 접수 날짜를 알려드리겠습니다.");
                                 break;
                             case 1 :
                                 PreferenceManager.setBoolean(PushActivity, "switch_written", isChecked);
+                                showNotice("필기시험 날짜를 알려드리겠습니다.");
                                 break;
                             case 2 :
                                 PreferenceManager.setBoolean(PushActivity, "switch_practical", isChecked);
+                                showNotice("실기시험 날짜를 알려드리겠습니다.");
                                 break;
                             case 3 :
                                 PreferenceManager.setBoolean(PushActivity, "switch_success", isChecked);
+                                showNotice("합격발표 날짜를 알려드리겠습니다.");
                                 break;
                         }
                         Snackbar.make(linearLayout, "푸시알림 허용하셨습니다.", Snackbar.LENGTH_SHORT).show();
@@ -111,10 +114,10 @@ public class PushActivity extends AppCompatActivity {
         });
     }
 
-    public void showNotice() {
+    public void showNotice(String text) {
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = null;
+        NotificationCompat.Builder builder;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (manager.getNotificationChannel(CHANNEL_ID) == null)
                 manager.createNotificationChannel(new NotificationChannel(
@@ -127,8 +130,9 @@ public class PushActivity extends AppCompatActivity {
 
         Intent intent = new Intent(PushActivity, PushActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(PushActivity, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentTitle("자격증어플 입니다.")
-                .setContentText("푸시알림에 동의하셨습니다.")
+        PreferenceManager.getBoolean(PushActivity, "");
+        builder.setContentTitle("당신의 성공을 응원합니다.")
+                .setContentText(text)
                 .setSmallIcon(android.R.drawable.ic_menu_view)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);

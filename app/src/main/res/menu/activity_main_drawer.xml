@@ -9,10 +9,6 @@
             android:icon="@drawable/icon_certification"
             android:title="@string/menu_certification" />
         <item
-            android:id="@+id/job"
-            android:icon="@drawable/icon_company"
-            android:title="@string/menu_job" />
-        <item
             android:id="@+id/bookmark"
             android:icon="@drawable/icon_bookmark"
             android:title="@string/menu_bookmark" />

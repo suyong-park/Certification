@@ -36,7 +36,6 @@ public class SearchActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String[] title_names = intent.getStringArrayExtra("title_name");
-        final String isCertification = intent.getStringExtra("category");
         String search_word = intent.getStringExtra("search_word");
 
         setTitle("" + search_word + " 관련 검색 결과");
@@ -67,11 +66,9 @@ public class SearchActivity extends AppCompatActivity {
 
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
-                    Intent intent;
-                    if(isCertification.equals("자격증")) // User search for certification
-                        intent = new Intent(searchActivity, CertificationActivity.class);
-                    else
-                        intent = new Intent(searchActivity, JobActivity.class);
+                    Intent intent = new Intent(searchActivity, CertificationActivity.class);
+                    //else
+                    //    intent = new Intent(searchActivity, JobActivity.class);
                     intent.putExtra("name", mAdapter.getRecycler_title(currentPos).getTitle());
                     intent.putExtra("search", true);
                     startActivity(intent);

@@ -66,87 +66,32 @@ public class Broadcast {
         }
     }
 
-    static String changeSearch(String search_word, String search_category) {
+    static String changeSearch(String search_word) {
         String query = "";
-
-        switch(search_category) {
-            case "자격증" :
-                if(search_word.equals("자격증"))
-                    query = "select name from certification";
-                else
-                    query = "select name from certification where name like " + "'%" + search_word + "%'";
-                break;
-            case "직업" :
-                if(search_word.equals("직업"))
-                    query = "select name from job";
-                else if(search_word.contains("보안"))
-                    query = "select name from job where category = (select category from job_category where category = '보안')";
-                else if(search_word.contains("프로그래머"))
-                    query = "select name from job where category = (select category from job_category where category = '프로그래머')";
-                else if(search_word.contains("데이터"))
-                    query = "select name from job where category = (select category from job_category where category = '데이터')";
-                else if(search_word.equals("디자인"))
-                    query = "select name from job where category = (select category from job_category where category = '디자인')";
-                else if(search_word.equals("공무원"))
-                    query = "select name from job where name = '선생님'";
-                else
-                    query = "select name from job where name like " + "'%" + search_word + "%'";
-                break;
-        }
+        if(search_word.equals("자격증"))
+            query = "select name from certification";
+        else
+            query = "select name from certification where name like " + "'%" + search_word + "%'";
         return query;
     }
 
-    private static HashMap<String, HashMap<String, String>> map;    // value is an hashmap.
+    private static HashMap<String, String> map_certification;    // value is an hashmap.
     static void HashMap() {
 
-        map = new HashMap<>();
-
-        HashMap<String, String> map_certification = new HashMap<String, String>();
-        HashMap<String, String> map_job = new HashMap<String, String>();
+        map_certification = new HashMap<>();
 
         map_certification.put("정처기", "정보처리기사");
         map_certification.put("gtq", "GTQ 1급");
         map_certification.put("GTQ", "GTQ 1급");
         map_certification.put("Gtq", "GTQ 1급");
         //map_certification.put("웹", "");
-        // TODO : 현재 디비 프로그래머 컬럼도 세분화하며 웹 개발, 안드로이드 개발 등으로 체계화할 것.
-
-        map_job.put("데이타", "데이터");
-        map_job.put("data", "데이터");
-        map_job.put("Data", "데이터");
-        map_job.put("대이터", "데이터");
-        map_job.put("대이타", "데이터");
-        map_job.put("db", "데이터");
-        map_job.put("DB", "데이터");
-        map_job.put("Db", "데이터");
-        map_job.put("데이터베이스", "데이터");
-        map_job.put("디비", "데이터");
-        map_job.put("개발자", "프로그래머");
-        map_job.put("개발", "프로그래머");
-        map_job.put("develop", "프로그래머");
-        map_job.put("developing", "프로그래머");
-        map_job.put("Develop", "프로그래머");
-        map_job.put("Developing", "프로그래머");
-        map_job.put("보앙", "보안");
-        map_job.put("보암", "보안");
-        map_job.put("security", "보안");
-        map_job.put("design", "디자인");
-        map_job.put("Design", "디자인");
-        map_job.put("번리사", "변리사");
-        map_job.put("web", "웹");
-        map_job.put("Web", "웹");
-
-        map.put("자격증", map_certification);
-        map.put("직업", map_job);
     }
 
-    static String Filtering(String category, String search_word) {
-        HashMap<String, String> filter = map.get(category);
+    static String Filtering(String search_word) {
+        if (map_certification.containsKey(search_word))
+            search_word = map_certification.get(search_word);  // TODO : 필터링 기능 수행 해당 요소의 value 값을 가져온다.
 
-        if (filter.containsKey(search_word))
-            search_word = filter.get(search_word);  // TODO : 필터링 기능 수행 해당 요소의 value 값을 가져온다.
-
-        return changeSearch(search_word, category);
+        return changeSearch(search_word);
     }
 }
 

@@ -8,11 +8,6 @@
         android:icon="@drawable/icon_certification"
         android:title="@string/menu_certification" />
     <item
-        android:id="@+id/menu_job"
-        app:showAsAction="always"
-        android:icon="@drawable/icon_company"
-        android:title="@string/menu_job" />
-    <item
         android:id="@+id/menu_bookmark"
         app:showAsAction="always"
         android:icon="@drawable/icon_bookmark"

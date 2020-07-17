@@ -17,12 +17,6 @@ public interface ConnectDB {
     @POST("certification_data.php")
     Call<List<Recycler_certification>> certification_data();
 
-    @POST("job_category_data.php")
-    Call<List<Recycler_category>> job_category_data();
-
-    @POST("job_data.php")
-    Call<List<Recycler_job>> job_data();
-
     @FormUrlEncoded
     @POST("search.php")
     Call<List<Recycler_onething>> search(

@@ -18,24 +18,11 @@
             android:id="@+id/fab_certification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="345dp"
-            android:layout_marginRight="30dp"
-            android:layout_gravity="bottom|end"
-            android:visibility="invisible"
-            android:src="@drawable/icon_certification"
-            app:borderWidth="0dp"
-            app:fabSize="normal"
-            />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_company"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="265dp"
             android:layout_marginRight="30dp"
             android:layout_gravity="bottom|end"
             android:visibility="invisible"
-            android:src="@drawable/icon_company"
+            android:src="@drawable/icon_certification"
             app:borderWidth="0dp"
             app:fabSize="normal"
             />
@@ -99,13 +86,6 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="vertical" >
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/text_layout"

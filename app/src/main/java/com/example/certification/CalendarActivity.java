@@ -8,15 +8,19 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import org.threeten.bp.DayOfWeek;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CalendarActivity extends AppCompatActivity {
-
-    MaterialCalendarView materialCalendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +28,17 @@ public class CalendarActivity extends AppCompatActivity {
         setContentView(R.layout.calendar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("자격증 정보 달력");
+        setTitle("캘린더");
 
-        materialCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
+        MaterialCalendarView materialCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
+
+        materialCalendarView.state().edit()
+                .setFirstDayOfWeek(DayOfWeek.SUNDAY)
+                .setMinimumDate(CalendarDay.from(2019, 1, 1))
+                .setMaximumDate(CalendarDay.from(2021, 12, 31))
+                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                .commit();
+
         materialCalendarView.addDecorators(
                 new SundayDecorator(),
                 new SaturdayDecorator()
@@ -55,8 +67,18 @@ class SundayDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        //day.copyTo(calendar);
-        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+        int weekDay = 0;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse(day.getDate().toString());
+            calendar.setTime(date);
+            weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return weekDay == Calendar.SUNDAY;
     }
 
@@ -76,7 +98,18 @@ class SaturdayDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+        int weekDay = 0;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse(day.getDate().toString());
+            calendar.setTime(date);
+            weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return weekDay == Calendar.SATURDAY;
     }
 

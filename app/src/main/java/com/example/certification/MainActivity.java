@@ -18,9 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,14 +46,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private long onBackPressedTime = 0;
     private boolean isFabOpen = false;
     private Animation fab_open, fab_close;
-    private FloatingActionButton[] fab = new FloatingActionButton[5];
+    private FloatingActionButton[] fab = new FloatingActionButton[4];
 
     MainActivity mainActivity;
     TextInputLayout text_layout;
     TextInputEditText editText;
     DrawerLayout drawer;
     BottomAppBar bottomAppBar;
-    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editText = findViewById(R.id.editText);
         bottomAppBar = findViewById(R.id.bottom_app_bar);
 
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 4; i++) {
             switch (i) {
                 case 0:
                     fab[0] = findViewById(R.id.fab_main);
@@ -94,16 +91,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case 2:
                     fab[2] = findViewById(R.id.fab_bookmark);
                 case 3:
-                    fab[3] = findViewById(R.id.fab_company);
-                case 4:
-                    fab[4] = findViewById(R.id.fab_certification);
+                    fab[3] = findViewById(R.id.fab_certification);
             }
         }
 
         fab_open = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(this, R.anim.fab_close);
 
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 4; i++) {
             final int count = i;
             fab[i].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,10 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             startActivity(intent);
                             break;
                         case 3:
-                            intent = new Intent(mainActivity, MainjobActivity.class);
-                            startActivity(intent);
-                            break;
-                        case 4:
                             intent = new Intent(mainActivity, MaincertifiActivity.class);
                             startActivity(intent);
                             break;
@@ -131,12 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }
-
-        String[] title = {"검색항목 선택", "자격증", "직업"};
-        spinner = findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        adapter.addAll(title);
-        spinner.setAdapter(adapter);
 
         bottomAppBar.setTitle(R.string.app_name);
         setSupportActionBar(bottomAppBar);
@@ -147,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onTouch(View v, MotionEvent event) {
                 if(isFabOpen) {
                     fab[0].setImageResource(R.drawable.icon_unfold_more);
-                    for (int i = 1; i < 5; i++) {
+                    for (int i = 1; i < 4; i++) {
                         fab[i].startAnimation(fab_close);
                         fab[i].setClickable(false);
                     }
@@ -189,10 +174,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEARCH: // Search
                         downKeyboard();
-                        if(spinner.getSelectedItem().toString().equals("검색항목 선택")) {
-                            Snackbar.make(drawer, "검색 항목을 선택하세요.", Snackbar.LENGTH_SHORT).show();
-                            return false;
-                        }
                         if(editText.getText().length() == 0) {
                             Snackbar.make(drawer, "검색 내용을 입력하세요.", Snackbar.LENGTH_SHORT).show();
                             return false;
@@ -214,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 super.onDrawerOpened(drawerView);
                 if(isFabOpen) {
                     fab[0].setImageResource(R.drawable.icon_unfold_more);
-                    for(int i = 1; i < 5; i++) {
+                    for(int i = 1; i < 4; i++) {
                         fab[i].startAnimation(fab_close);
                         fab[i].setClickable(false);
                     }
@@ -237,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void isOpenFab() {
         if(isFabOpen) {
             fab[0].setImageResource(R.drawable.icon_unfold_more);
-            for(int i = 1; i < 5; i++) {
+            for(int i = 1; i < 4; i++) {
                 fab[i].startAnimation(fab_close);
                 fab[i].setClickable(false);
             }
@@ -245,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else {
             fab[0].setImageResource(R.drawable.icon_unfold_less);
-            for(int i = 1; i < 5; i++) {
+            for(int i = 1; i < 4; i++) {
                 fab[i].startAnimation(fab_open);
                 fab[i].setClickable(true);
             }
@@ -256,10 +237,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void searchResult() {
 
         final String search_word = editText.getText().toString().trim(); // To searching word
-        final String search_category = spinner.getSelectedItem().toString(); // Category of Search_word
 
         ConnectDB connectDB = Broadcast.getRetrofit().create(ConnectDB.class);
-        Call<List<Recycler_onething>> call = connectDB.search(Broadcast.Filtering(search_category, search_word));
+        Call<List<Recycler_onething>> call = connectDB.search(Broadcast.Filtering(search_word));
 
         call.enqueue(new Callback<List<Recycler_onething>>() {
             @Override
@@ -273,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             title_name[i] = result.get(i).getTitle();
                         Intent intent = new Intent(mainActivity, SearchActivity.class);
                         intent.putExtra("title_name", title_name);
-                        intent.putExtra("category", search_category);
                         intent.putExtra("search_word", search_word);
                         startActivity(intent);
                     }
@@ -326,10 +305,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.certification :
                 intent = new Intent(mainActivity, MaincertifiActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.job :
-                intent = new Intent(mainActivity, MainjobActivity.class);
                 startActivity(intent);
                 break;
             case R.id.bookmark :
