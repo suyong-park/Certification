@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -51,6 +52,7 @@ public class Broadcast {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                             activity.startActivity(intent);
+                            activity.finish();
                         }
                     })
                     .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -81,9 +83,7 @@ public class Broadcast {
         map_certification = new HashMap<>();
 
         map_certification.put("정처기", "정보처리기사");
-        map_certification.put("gtq", "GTQ 1급");
-        map_certification.put("GTQ", "GTQ 1급");
-        map_certification.put("Gtq", "GTQ 1급");
+        //map_certification.put("정처기", "정보처리기사");
         //map_certification.put("웹", "");
     }
 
@@ -92,6 +92,25 @@ public class Broadcast {
             search_word = map_certification.get(search_word);  // TODO : 필터링 기능 수행 해당 요소의 value 값을 가져온다.
 
         return changeSearch(search_word);
+    }
+
+    private static HashMap<Integer, HashMap<String, String>> total_data;
+    static HashMap HashMap_calendar(Activity activity) {
+
+        HashMap<String, String> test_date = new HashMap<>();
+        total_data = new HashMap<>();
+
+        int num = PreferenceManager.getInt(activity, ""); // Number of Bookmark
+        for(int i = 0; i <= num; i++)
+            test_date.put(PreferenceManager.getString(activity, Integer.toString(i)), PreferenceManager.getString(activity, i + "_date"));
+
+        for(int i = 0; i <= test_date.size(); i++)
+            total_data.put(i, test_date);
+
+        for(int i = 0; i <= total_data.size(); i++)
+            Log.d("", "" + total_data.get(i));
+
+        return total_data;
     }
 }
 
@@ -106,7 +125,7 @@ class PreferenceManager {
         return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    // save String value
+    // save String array value
     public static void setString(Context context, String key, String value) {
         SharedPreferences prefs = getPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();

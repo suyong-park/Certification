@@ -267,10 +267,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Call<List<Recycler_onething>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
-                Broadcast.AlertBuild(mainActivity, "에러", "서버 연결에 실패했습니다.")
-                        .setPositiveButton("확인", null)
-                        .setNegativeButton("취소", null)
-                        .show();
             }
         });
     }

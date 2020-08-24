@@ -45,11 +45,9 @@ public class DetailcertifiActivity extends AppCompatActivity {
         category = intent.getStringExtra("category");  // category of certification
 
         setTitle(category);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Broadcast.isNetworkWorking(DetailcertifiActivity, false);
-
         bookmark = (Button) findViewById(R.id.bookmark);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.title_recycler_view);
@@ -69,7 +67,6 @@ public class DetailcertifiActivity extends AppCompatActivity {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 View childView = rv.findChildViewUnder(e.getX(), e.getY());
-
                 if(childView != null && gesture_detector.onTouchEvent((e))) {
                     int currentPos = rv.getChildAdapterPosition(childView);
                     Intent it = new Intent(DetailcertifiActivity, CertificationActivity.class);
@@ -121,10 +118,6 @@ public class DetailcertifiActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Recycler_category>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
-                Broadcast.AlertBuild(DetailcertifiActivity, "에러", "서버 연결에 실패했습니다.")
-                        .setPositiveButton("확인", null)
-                        .setNegativeButton("취소", null)
-                        .show();
             }
         });
     }

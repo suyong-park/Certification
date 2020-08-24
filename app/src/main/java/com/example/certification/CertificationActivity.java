@@ -34,7 +34,7 @@ public class CertificationActivity extends AppCompatActivity {
     LinearLayout certification_layout;
 
     boolean from_bookmark, from_search;
-    String title;
+    String title, receipt_date, written_date, practical_date, announcement_date;
     int max = 1;
 
     @Override
@@ -58,7 +58,6 @@ public class CertificationActivity extends AppCompatActivity {
 
         certification_layout = (LinearLayout) findViewById(R.id.certification_layout);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.certification_recycler_view);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(certificationactivity, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new CertificationDetailAdapter();
@@ -128,9 +127,11 @@ public class CertificationActivity extends AppCompatActivity {
                 break;
         }
 
+        // Below code is for Add Bookmark
         num_temp = PreferenceManager.getInt(certificationactivity, "") + 1;
         PreferenceManager.setString(certificationactivity, Integer.toString(num_temp), title);
         PreferenceManager.setInt(certificationactivity, "", num_temp);
+        PreferenceManager.setString(certificationactivity, num_temp + "_date", receipt_date + ", " + written_date + ", " + practical_date + ", " + announcement_date);
         Snackbar.make(certification_layout, "북마크에 추가했습니다.", Snackbar.LENGTH_SHORT).show();
     }
 
@@ -151,17 +152,18 @@ public class CertificationActivity extends AppCompatActivity {
                         for (int i = 0; i < result.size(); i++) {
                                 if (max <= result.get(i).getNUM())
                                     max = result.get(i).getNUM();
-                                if (title.contains(result.get(i).getNAME()))
-                                    mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_WRITTEN(), result.get(i).getSUBJECT_PRACTICAL(),  result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
+                                if (title.contains(result.get(i).getNAME())) {
+                                    mAdapter.add(new Recycler_certification(result.get(i).getNAME(), result.get(i).getDESCRIPTION(), result.get(i).getCOMPANY(), result.get(i).getJOB(), result.get(i).getLINK(), result.get(i).getNUM(), result.get(i).getSUBJECT_WRITTEN(), result.get(i).getSUBJECT_PRACTICAL(), result.get(i).getRECEIPT_DATE(), result.get(i).getWRITTEN_DATE(), result.get(i).getPRACTICAL_DATE(), result.get(i).getANNOUNCEMENT_DATE()));
+                                    receipt_date = result.get(i).getRECEIPT_DATE();
+                                    written_date = result.get(i).getWRITTEN_DATE();
+                                    practical_date = result.get(i).getPRACTICAL_DATE();
+                                    announcement_date = result.get(i).getANNOUNCEMENT_DATE();
+                                }
                         }
             }
             @Override
             public void onFailure(Call<List<Recycler_certification>> call, Throwable t) {
                 Log.d("ERROR MESSAGE", "CONNECT FAIL TO SERVER");
-                Broadcast.AlertBuild(certificationactivity, "에러", "서버 연결에 실패했습니다.")
-                        .setPositiveButton("확인", null)
-                        .setNegativeButton("취소", null)
-                        .show();
             }
         });
     }
@@ -172,7 +174,6 @@ public class CertificationActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            TextView name;
             TextView description;
             TextView link;
             TextView subject_written;
@@ -184,7 +185,6 @@ public class CertificationActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                name = (TextView) itemView.findViewById(R.id.name);
                 description= (TextView) itemView.findViewById(R.id.description);
                 link = (TextView) itemView.findViewById(R.id.link);
                 subject_written = (TextView) itemView.findViewById(R.id.subject_written);
@@ -196,7 +196,6 @@ public class CertificationActivity extends AppCompatActivity {
             }
 
             public void setData(Recycler_certification data) {
-                name.setText(data.getNAME());
                 description.setText(data.getDESCRIPTION());
                 link.setText(data.getLINK());
                 subject_written.setText(data.getSUBJECT_WRITTEN());

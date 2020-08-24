@@ -130,7 +130,7 @@ public class PushActivity extends AppCompatActivity {
 
         Intent intent = new Intent(PushActivity, PushActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(PushActivity, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PreferenceManager.getBoolean(PushActivity, "");
+        //PreferenceManager.getBoolean(PushActivity, "");
         builder.setContentTitle("당신의 성공을 응원합니다.")
                 .setContentText(text)
                 .setSmallIcon(android.R.drawable.ic_menu_view)

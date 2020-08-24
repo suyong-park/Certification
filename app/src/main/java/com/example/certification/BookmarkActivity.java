@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -122,6 +121,7 @@ public class BookmarkActivity extends AppCompatActivity {
                 final int position = viewHolder.getAdapterPosition();
                 int last_num, remove_position;
                 String text;
+                int after_delete, before_delete = mlist.size();
 
                 last_num = PreferenceManager.getInt(BookmarkActivity, "");
                 for(int i = 0; i <= last_num; i++) {
@@ -131,10 +131,16 @@ public class BookmarkActivity extends AppCompatActivity {
                         remove_position = position + 1;
                         mlist.remove(position);
                         PreferenceManager.removeKey(BookmarkActivity, temp);
+                        after_delete = mlist.size();
+
                         for(int j = remove_position; j < mAdapter.getItemCount() + 1; j++) {
                             String temp_text = PreferenceManager.getString(BookmarkActivity, String.valueOf(j));
                             PreferenceManager.setString(BookmarkActivity, String.valueOf(j - 1), temp_text);
                         }
+
+                        if(before_delete > after_delete)
+                            PreferenceManager.removeKey(BookmarkActivity, String.valueOf(after_delete));
+
                         PreferenceManager.setInt(BookmarkActivity, "", mAdapter.getItemCount() - 1);
                         // setting newest number after delete bookmark
                         break;
@@ -197,7 +203,13 @@ public class BookmarkActivity extends AppCompatActivity {
         for(int i = 0; i <= last_num; i++) {
             String temp = String.valueOf(i);
             text = PreferenceManager.getString(BookmarkActivity, temp);
+            /*
             Log.d("북마크 현재 상황", "현재 " + temp + "번째에 있는 데이터 값은 " + text + "입니다.");
+            Log.d("북마크 현재 상황", "현재 " + (i +  1) + "번째에 있는 데이터 값은 " + PreferenceManager.getString(BookmarkActivity, String.valueOf(i + 1)) + "입니다.");
+            Log.d("북마크 현재 상황", "현재 " + (i +  2) + "번째에 있는 데이터 값은 " + PreferenceManager.getString(BookmarkActivity, String.valueOf(i + 2)) + "입니다.");
+            Log.d("북마크 현재 상황", "현재 " + (i +  3) + "번째에 있는 데이터 값은 " + PreferenceManager.getString(BookmarkActivity, String.valueOf(i + 3)) + "입니다.");
+            Log.d("북마크 현재 상황", "-----------------------------------");
+             */
             if(text.equals(null) || text.equals(""))
                 continue;
             mAdapter.add(new Recycler_onething(text));
